@@ -148,7 +148,7 @@ python record_video.py \
 
 输出包括同名 MP4 和 JSON，以及 `seed1_6x6_episode20000_step_*.png` 关键帧，用于行为分析和演示。关键帧覆盖初始状态、拾钥匙、开门、到达目标和结束状态中实际发生的事件。轨迹中记录动作、位置、方向及关键事件；渲染画面仅用于展示，策略输入仍是局部观测。
 
-`results/videos/` 下的视频和图片纳入 Git；轨迹 JSON 和 CSV 仅保留在本地，由 `.gitignore` 排除。
+`results/videos/` 下的视频、图片和轨迹 JSON 纳入 Git；CSV 仅保留在本地，由 `.gitignore` 排除。
 
 ## 改进方法（One Primary Improvement）
 

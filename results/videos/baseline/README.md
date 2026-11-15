@@ -2,7 +2,7 @@
 
 本目录保存训练 seed 1 的 final 模型在四个固定回合上的两条成功、两条失败轨迹。模型为 `../../baseline/seed_1/final.zip`。全局地图渲染用于解释行为，策略输入仍为局部 `7×7×3` 编码。
 
-MP4、图片（包括关键帧、失败循环图和预览图）、说明和合成脚本纳入 Git；本目录的轨迹 JSON 和 CSV 由 `.gitignore` 排除，但仍保留在本地。下文指向 JSON 和 CSV 的相对链接供本地查阅，克隆仓库后需重新生成或取得相应文件。
+MP4、图片（包括关键帧、失败循环图和预览图）、轨迹 JSON、说明和合成脚本纳入 Git；本目录的 CSV 由 `.gitignore` 排除，但仍保留在本地。下文指向 CSV 的相对链接供本地查阅，克隆仓库后需重新生成或取得相应文件。
 
 ## 四条回合
 
@@ -85,4 +85,4 @@ python record_video.py --model results/baseline/seed_1/final.zip --env-id MiniGr
 python results/videos/baseline/make_demo.py
 ```
 
-演示合成脚本读取已有 MP4、轨迹 JSON 和上述循环关键帧，不重新推理或训练；使用现有环境中的 ImageIO、Pillow 和 Matplotlib 字体，不需要安装新依赖。由于轨迹 JSON 不纳入 Git，合成前应确认本地输入齐全。合成脚本也拒绝覆盖已有演示视频，重建时可将脚本与输入文件复制到新的目录并排除旧的演示 MP4。核心训练、评测、视频导出脚本和模型权重保持不变。
+演示合成脚本读取已有 MP4、轨迹 JSON 和上述循环关键帧，不重新推理或训练；使用现有环境中的 ImageIO、Pillow 和 Matplotlib 字体，不需要安装新依赖。合成脚本也拒绝覆盖已有演示视频，重建时可将脚本与输入文件复制到新的目录并排除旧的演示 MP4。核心训练、评测、视频导出脚本和模型权重保持不变。

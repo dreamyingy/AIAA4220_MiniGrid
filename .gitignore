@@ -16,8 +16,7 @@ AGENTS.md
 /results/**/queue.log
 /results/**/run_seeds.sh
 
-# Share video images; keep trajectory JSON and verification CSV local.
-/results/videos/**/*.json
+# Share videos, images and trajectory JSON; keep verification CSV local.
 /results/videos/**/*.csv
 
 # Local implementation checks and Python caches

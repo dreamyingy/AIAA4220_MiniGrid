@@ -1,0 +1,91 @@
+Command: /data/zhuangyuzhe/conda/envs/Minigrid/bin/python train.py --env-id MiniGrid-DoorKey-6x6-v0 --algo ppo --total-steps 1000000 --seed 3 --device cuda:0
+Started: 2026-11-15T08:36:52+0800
+Python: 3.11.18
+Platform: Linux-5.4.0-216-generic-x86_64-with-glibc2.31
+CPU: x86_64
+Torch threads: 1
+Device: cuda:0
+CUDA_VISIBLE_DEVICES: GPU-77951175-b292-bbad-2f94-03bd49b98fb9
+GPU: NVIDIA A40
+Versions: {'minigrid': '3.1.0', 'gymnasium': '1.4.0', 'stable-baselines3': '2.9.2', 'torch': '2.15.0', 'numpy': '2.4.6'}
+Code commit: HEAD
+Working tree status:
+?? .gitignore
+?? README.md
+?? analyze.py
+?? common.py
+?? configs/
+?? evaluate.py
+?? record_video.py
+?? requirements.txt
+?? results/
+?? train.py
+
+Network:
+ActorCriticCnnPolicy(
+  (features_extractor): MinigridFeaturesExtractor(
+    (cnn): Sequential(
+      (0): Conv2d(3, 16, kernel_size=(2, 2), stride=(1, 1))
+      (1): ReLU()
+      (2): Conv2d(16, 32, kernel_size=(2, 2), stride=(1, 1))
+      (3): ReLU()
+      (4): Conv2d(32, 64, kernel_size=(2, 2), stride=(1, 1))
+      (5): ReLU()
+      (6): Flatten(start_dim=1, end_dim=-1)
+    )
+    (linear): Sequential(
+      (0): Linear(in_features=1024, out_features=128, bias=True)
+      (1): ReLU()
+    )
+  )
+  (pi_features_extractor): MinigridFeaturesExtractor(
+    (cnn): Sequential(
+      (0): Conv2d(3, 16, kernel_size=(2, 2), stride=(1, 1))
+      (1): ReLU()
+      (2): Conv2d(16, 32, kernel_size=(2, 2), stride=(1, 1))
+      (3): ReLU()
+      (4): Conv2d(32, 64, kernel_size=(2, 2), stride=(1, 1))
+      (5): ReLU()
+      (6): Flatten(start_dim=1, end_dim=-1)
+    )
+    (linear): Sequential(
+      (0): Linear(in_features=1024, out_features=128, bias=True)
+      (1): ReLU()
+    )
+  )
+  (vf_features_extractor): MinigridFeaturesExtractor(
+    (cnn): Sequential(
+      (0): Conv2d(3, 16, kernel_size=(2, 2), stride=(1, 1))
+      (1): ReLU()
+      (2): Conv2d(16, 32, kernel_size=(2, 2), stride=(1, 1))
+      (3): ReLU()
+      (4): Conv2d(32, 64, kernel_size=(2, 2), stride=(1, 1))
+      (5): ReLU()
+      (6): Flatten(start_dim=1, end_dim=-1)
+    )
+    (linear): Sequential(
+      (0): Linear(in_features=1024, out_features=128, bias=True)
+      (1): ReLU()
+    )
+  )
+  (mlp_extractor): MlpExtractor(
+    (policy_net): Sequential(
+      (0): Linear(in_features=128, out_features=64, bias=True)
+      (1): Tanh()
+      (2): Linear(in_features=64, out_features=64, bias=True)
+      (3): Tanh()
+    )
+    (value_net): Sequential(
+      (0): Linear(in_features=128, out_features=64, bias=True)
+      (1): Tanh()
+      (2): Linear(in_features=64, out_features=64, bias=True)
+      (3): Tanh()
+    )
+  )
+  (action_net): Linear(in_features=64, out_features=7, bias=True)
+  (value_net): Linear(in_features=64, out_features=1, bias=True)
+)
+Nominal steps: 1000000
+Actual steps: 1001472
+Timing (seconds): {'learn_seconds': 4786.836012913031, 'periodic_eval_seconds': 275.05955492705107}
+Final model: results/baseline/seed_3/final.zip

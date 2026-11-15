@@ -1,0 +1,23 @@
+Formal final evaluation completed: 2026-11-15T15:05:01.009463+08:00
+Methods: baseline; training seeds: 1, 2, 3.
+Models: results/baseline/seed_<seed>/final.zip; each saved after 1,001,472 training steps.
+Policy: deterministic=True. Evaluation device: CPU. PyTorch threads per process: 1.
+Python: 3.11.18
+Versions: minigrid=3.1.0, gymnasium=1.4.0, stable-baselines3=2.9.2, torch=2.15.0, numpy=2.4.6
+6x6: 100 episodes per model; episode seeds 20000..20099.
+8x8: 100 episodes per model; episode seeds 30000..30099; no training or adaptation.
+Total: 600 episodes. All six CSV files passed count, seed, model-step, environment and phase checks.
+Original environment rewards; success determined by the original DoorKey goal reward.
+Per-seed metrics first, then three-seed mean and sample SD (ddof=1); no confidence intervals.
+Successful-episode median steps is computed per seed before aggregation.
+Final results are separate from periodic results and excluded from training AUC/T80.
+
+Commands executed for each seed in 1, 2, 3:
+python evaluate.py --model results/baseline/seed_<seed>/final.zip --env-id MiniGrid-DoorKey-6x6-v0 --episodes 100 --episode-seed-start 20000 --device cpu --output results/baseline/seed_<seed>/final_6x6.csv
+python evaluate.py --model results/baseline/seed_<seed>/final.zip --env-id MiniGrid-DoorKey-8x8-v0 --episodes 100 --episode-seed-start 30000 --device cpu --output results/baseline/seed_<seed>/final_8x8.csv
+python analyze.py --input results/baseline --output results/summary
+
+Raw results: results/baseline/seed_<seed>/final_6x6.csv and final_8x8.csv.
+Shared summaries and plots: results/summary/.
+Local execution logs: results/baseline/final_6x6.console.log and final_8x8.console.log.
+No model weights, source code, training configurations, Git commits or remote repository were changed.

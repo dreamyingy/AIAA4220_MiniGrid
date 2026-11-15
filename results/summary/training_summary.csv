@@ -1,0 +1,2 @@
+method,nominal_steps,actual_steps,n_seeds,t80_reached_seeds,normalized_auc_mean,normalized_auc_std,normalized_auc_valid_n,t80_mean,t80_std,t80_valid_n,learn_seconds_mean,learn_seconds_std,learn_seconds_valid_n,periodic_eval_seconds_mean,periodic_eval_seconds_std,periodic_eval_seconds_valid_n,final_eval_seconds_mean,final_eval_seconds_std,final_eval_seconds_valid_n
+baseline,1000000,1001472,3,3,0.8294166666666666,0.026303912890163997,3,150000.0,0.0,3,6061.928069281003,1110.4453495630696,3,319.0639012073516,39.31558397739941,3,30.453466368082445,11.678314307723758,3

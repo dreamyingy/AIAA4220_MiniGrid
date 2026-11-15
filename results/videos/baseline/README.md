@@ -1,8 +1,8 @@
 # Baseline Final 轨迹证据
 
-本目录保存训练 seed 1 的 final 模型在四个固定回合上的两条成功、两条失败证据。模型为 `../../baseline/seed_1/final.zip`，实际训练步数为 1,001,472；使用 CPU、确定性策略与原始 DoorKey 奖励，未重新训练或适配。全局地图渲染用于解释行为，策略输入仍为局部 `7×7×3` 编码。
+本目录保存训练 seed 1 的 final 模型在四个固定回合上的两条成功、两条失败轨迹。模型为 `../../baseline/seed_1/final.zip`。全局地图渲染用于解释行为，策略输入仍为局部 `7×7×3` 编码。
 
-MP4、说明和合成脚本可纳入 Git；本目录的图片、轨迹 JSON 和 CSV 由 `.gitignore` 排除，但仍保留在本地。下文指向这些辅助文件的相对链接供本地查阅，克隆仓库后需重新生成或取得相应文件。原始评测 CSV 与汇总图表位于本目录之外，仍可纳入 Git。
+MP4、图片（包括关键帧、失败循环图和预览图）、说明和合成脚本纳入 Git；本目录的轨迹 JSON 和 CSV 由 `.gitignore` 排除，但仍保留在本地。下文指向 JSON 和 CSV 的相对链接供本地查阅，克隆仓库后需重新生成或取得相应文件。
 
 ## 四条回合
 
@@ -17,13 +17,9 @@ MP4、说明和合成脚本可纳入 Git；本目录的图片、轨迹 JSON 和 
 
 ## 一致性核对
 
-核对来源为 [6×6 原始评测 CSV](../../baseline/seed_1/final_6x6.csv) 与 [8×8 原始评测 CSV](../../baseline/seed_1/final_8x8.csv)。四条回放的 `train_seed`、`model_step`、`env_id`、`episode_seed`、`success`、`return`、`steps`、`terminated`、`truncated`、`key_step`、`door_step`、`goal_step` 与对应评测行一致。成功回合正常终止；失败回合均为超时截断。CSV 的空事件字段与 JSON 的 `null` 等价。
+核对来源为 [6×6 原始评测 CSV](../../baseline/seed_1/final_6x6.csv) 与 [8×8 原始评测 CSV](../../baseline/seed_1/final_8x8.csv)。四条回放的 `train_seed`、`model_step`、`env_id`、`episode_seed`、`success`、`return`、`steps`、`terminated`、`truncated`、`key_step`、`door_step`、`goal_step` 与对应评测行一致。成功回合正常终止；失败回合均为超时截断。
 
-核对同时检查轨迹从 step 0 开始且连续、长度为 `steps + 1`，以及视频帧数和关键帧；详见 [verification.csv](verification.csv)。四条轨迹均按 JSON 动作从相同环境 seed 逐步重建，共检查 1,310 个状态；每一步的坐标、方向、携带物、门状态、局部观测与奖励均一致，15 张事件关键帧与重建渲染逐像素一致。原始评测只保存回合指标与事件步数，因此不能声称已与原始评测中未保存的完整动作序列逐步比较。
-
-另保存 10 张循环关键帧：30007 的 steps 6–12，30009 的 steps 12–14。加上事件关键帧，共 25 张独立 PNG；[失败循环图](failure_cycles.png) 汇集关键状态，便于报告引用。
-
-`elapsed_seconds` 不作一致性比较：视频回放增加了渲染、帧采集等工作，时间也受机器负载影响。
+另保存 10 张循环关键帧：30007 的 steps 6–12，30009 的 steps 12–14。加上事件关键帧，共 25 张独立 PNG；[失败循环图](failure_cycles.png) 汇集关键状态。
 
 ## 两种可观察的失败行为
 
@@ -67,7 +63,7 @@ step 14: (4,1) 东  -- 左转，回到 step 12 状态
 
 [baseline_demo_44s.mp4](baseline_demo_44s.mp4) 为 1280×720、30 fps、无声英文注释演示，仅展示四条轨迹，不包含开头介绍和结尾总结页面。保留实际步骤编号，使用减速展示与明确标注的跳转。完整回合仍保存在上表的原始视频中，尤其两条失败原视频均包含全部 640 个动作。
 
-成片规格为 1,320 帧、44.00 秒；[画面预览](demo_preview.png) 展示四条轨迹。完整四条回放分别为 1.2、1.6、64.1、64.1 秒。
+成片规格为 1,320 帧、44.00 秒。完整四条回放分别为 1.2、1.6、64.1、64.1 秒。
 
 | 视频时间 | 内容 |
 |---|---|
@@ -89,4 +85,4 @@ python record_video.py --model results/baseline/seed_1/final.zip --env-id MiniGr
 python results/videos/baseline/make_demo.py
 ```
 
-演示合成脚本读取已有 MP4、轨迹 JSON 和上述循环关键帧，不重新推理或训练；使用现有环境中的 ImageIO、Pillow 和 Matplotlib 字体，不需要安装新依赖。由于辅助文件不纳入 Git，合成前应确认本地输入齐全。合成脚本也拒绝覆盖已有演示视频，重建时可将脚本与输入文件复制到新的目录并排除旧的演示 MP4。核心训练、评测、视频导出脚本和模型权重保持不变。
+演示合成脚本读取已有 MP4、轨迹 JSON 和上述循环关键帧，不重新推理或训练；使用现有环境中的 ImageIO、Pillow 和 Matplotlib 字体，不需要安装新依赖。由于轨迹 JSON 不纳入 Git，合成前应确认本地输入齐全。合成脚本也拒绝覆盖已有演示视频，重建时可将脚本与输入文件复制到新的目录并排除旧的演示 MP4。核心训练、评测、视频导出脚本和模型权重保持不变。

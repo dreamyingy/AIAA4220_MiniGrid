@@ -8,6 +8,7 @@ import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.ticker import PercentFormatter
 import numpy as np
 import pandas as pd
 
@@ -151,47 +152,62 @@ def save_figure(fig, directory, name):
 def plot_results(config, periodic, periodic_summary, final, final_summary, output):
     directory = output / "figures"
     directory.mkdir(parents=True, exist_ok=True)
-    fig, ax = plt.subplots(figsize=(7, 4))
+    fig, ax = plt.subplots(figsize=(10, 4.6))
     for seed, group in periodic.groupby("train_seed"):
-        ax.plot(group["model_step"], group["success_rate"], lw=1, alpha=0.65,
+        ax.plot(group["model_step"], group["success_rate"], lw=1.5, alpha=0.9,
                 label=f"Seed {seed}")
     x = periodic_summary["model_step"].to_numpy()
     mean = periodic_summary["success_rate_mean"].to_numpy()
     sd = periodic_summary["success_rate_std"].to_numpy()
-    ax.plot(x, mean, color="black", lw=2, label="Three-seed mean")
-    ax.fill_between(x, mean - sd, mean + sd, color="black", alpha=0.15,
-                    label="± sample SD (ddof=1)")
-    ax.axhline(0.8, color="tab:orange", ls="--", lw=1, label="80% success")
-    ax.set(xlabel="Training environment steps", ylabel="6×6 success rate",
+    ax.plot(x, mean, color="black", ls="--", lw=2, label="Three-seed mean", zorder=3)
+    ax.fill_between(x, mean - sd, mean + sd, color="gray", alpha=0.18,
+                    label="± sample SD (ddof=1)", zorder=0)
+    ax.axhline(0.8, color="tab:purple", ls=":", lw=1.4, label="80% success")
+    ax.set(xlabel="Training environment steps", ylabel="Success rate (SR)",
+           xticks=[0, 200_000, 400_000, 600_000, 800_000, 1_000_000],
+           xticklabels=["0", "200k", "400k", "600k", "800k", "1M"],
            xlim=(0, config["total_steps"]),
            ylim=(min(0, float((mean - sd).min())) - 0.03,
                  max(1, float((mean + sd).max())) + 0.03),
            yticks=np.linspace(0, 1, 6),
-           title=f"{config['method']}: periodic evaluation ({config['eval_episodes']} episodes / seed / point)")
-    ax.grid(alpha=0.2)
-    ax.legend(fontsize=8, loc="best")
-    fig.tight_layout()
+           title="6×6 Learning Curve")
+    ax.yaxis.set_major_formatter(PercentFormatter(xmax=1))
+    ax.set_axisbelow(True)
+    ax.grid(axis="y", alpha=0.2)
+    handles, labels = ax.get_legend_handles_labels()
+    fig.legend(handles, labels, loc="lower center", ncol=6, frameon=False, fontsize=9)
+    fig.tight_layout(rect=(0, 0.08, 1, 1))
     save_figure(fig, directory, "learning_curve")
 
-    fig, axes = plt.subplots(1, 2, figsize=(7, 4), sharey=True)
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4.6), sharey=True)
     lower = final_summary["success_rate_mean"] - final_summary["success_rate_std"]
     upper = final_summary["success_rate_mean"] + final_summary["success_rate_std"]
-    limits = (min(0, float(lower.min())) - 0.03, max(1, float(upper.max())) + 0.03)
+    limits = (min(0, float(lower.min())), max(1, float(upper.max())) + 0.18)
     for ax, (size, env_id) in zip(axes, ENVS.items()):
         group = final.loc[final["env_id"].eq(env_id)].sort_values("train_seed")
         summary = final_summary.loc[final_summary["env_id"].eq(env_id)].iloc[0]
-        for position, row in zip((0.85, 1, 1.15), group.itertuples()):
-            ax.scatter(position, row.success_rate, label=f"Seed {row.train_seed}", zorder=3)
-        ax.errorbar(1, summary["success_rate_mean"], yerr=summary["success_rate_std"],
-                    color="black", fmt="D", capsize=5, label="Mean ± sample SD", zorder=4)
-        ax.set(title=f"Final {size}", xticks=[1], xticklabels=[config["method"]],
-               xlim=(0.6, 1.4), ylim=limits, yticks=np.linspace(0, 1, 6))
+        mean, sd = summary["success_rate_mean"], summary["success_rate_std"]
+        bars = ax.bar(group["train_seed"], group["success_rate"], width=0.6,
+                      color=["tab:blue", "tab:orange", "tab:green"], zorder=2)
+        ax.bar_label(bars, labels=[f"{rate:.0%}" for rate in group["success_rate"]],
+                     padding=4, fontsize=10)
+        ax.axhline(mean, color="black", ls="--", lw=1.4, label="Three-seed mean", zorder=3)
+        ax.axhspan(mean - sd, mean + sd, color="gray", alpha=0.18,
+                   label="± sample SD (ddof=1)", zorder=0)
+        ax.text(0.5, 0.96, f"Mean ± sample SD: {mean:.2%} ± {sd * 100:.2f} pp",
+                transform=ax.transAxes, ha="center", va="top", fontsize=10)
+        title = "6×6" if size == "6x6" else "8×8 (Zero-shot Transfer)"
+        ax.set(title=title, xlabel="Training seed", xticks=group["train_seed"],
+               xticklabels=[f"Seed {seed}" for seed in group["train_seed"]],
+               xlim=(0.4, 3.6), ylim=limits, yticks=np.linspace(0, 1, 6))
+        ax.yaxis.set_major_formatter(PercentFormatter(xmax=1))
+        ax.set_axisbelow(True)
         ax.grid(axis="y", alpha=0.2)
-    axes[0].set_ylabel("Success rate")
-    axes[1].legend(fontsize=8, loc="best")
-    fig.suptitle(f"Final at {config['actual_steps']:,} steps\n"
-                 f"{config['eval_episodes']} episodes / seed / environment")
-    fig.tight_layout()
+    axes[0].set_ylabel("Success rate (SR)")
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc="lower center", ncol=2, frameon=False, fontsize=9)
+    fig.suptitle("Final 6×6 and 8×8 comparison with uncertainty", fontsize=12)
+    fig.tight_layout(rect=(0, 0.07, 1, 0.95))
     save_figure(fig, directory, "final_success")
 
 

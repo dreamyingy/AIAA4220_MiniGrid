@@ -16,6 +16,14 @@ AGENTS.md
 /results/**/queue.log
 /results/**/run_seeds.sh
 
+# Keep video images, trajectory JSON and verification CSV local.
+/results/videos/**/*.png
+/results/videos/**/*.jpg
+/results/videos/**/*.jpeg
+/results/videos/**/*.webp
+/results/videos/**/*.json
+/results/videos/**/*.csv
+
 # Local implementation checks and Python caches
 /checks/
 __pycache__/

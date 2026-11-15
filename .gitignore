@@ -1,0 +1,22 @@
+# Existing project materials
+/MiniGrid_Project_Handbook.docx
+/Rubrics/
+/Templates/
+
+# Local tooling and credentials
+/.agents/
+/.aws/
+/.codex/
+AGENTS.md
+
+# Share final models, configs, metadata, raw results, summaries and evidence.
+# Keep intermediate checkpoints and local launch/console logs out of Git.
+/results/**/checkpoints/
+/results/**/*.console.log
+/results/**/queue.log
+/results/**/run_seeds.sh
+
+# Local implementation checks and Python caches
+/checks/
+__pycache__/
+*.pyc

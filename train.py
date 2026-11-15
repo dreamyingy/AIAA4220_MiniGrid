@@ -1,0 +1,129 @@
+"""Train the tutorial PPO baseline; final evaluation is a separate command."""
+
+import argparse
+import json
+import os
+import platform
+import shlex
+import subprocess
+import sys
+import time
+from importlib.metadata import version
+from pathlib import Path
+
+import torch
+from stable_baselines3 import PPO
+from stable_baselines3.common.callbacks import BaseCallback
+from stable_baselines3.common.logger import configure
+
+from common import MinigridFeaturesExtractor, load_config, make_env
+from evaluate import evaluate_episodes, write_results
+
+
+class PeriodicEvaluation(BaseCallback):
+    def __init__(self, config, output_dir):
+        super().__init__()
+        self.config = config
+        self.output_dir = output_dir
+        self.eval_seconds = 0.0
+
+    def evaluate(self):
+        start = time.perf_counter()
+        cfg = self.config
+        seeds = range(cfg["periodic_seed_start"],
+                      cfg["periodic_seed_start"] + cfg["eval_episodes"])
+        rows = evaluate_episodes(self.model, cfg["env_id"], seeds,
+                                 method=cfg["method"], phase="periodic")
+        write_results(rows, self.output_dir / "periodic_episodes.csv", append=True)
+        self.eval_seconds += time.perf_counter() - start
+        success = sum(row["success"] for row in rows) / len(rows)
+        print(f"Periodic step={self.num_timesteps}: success={success:.3f}", flush=True)
+
+    def _on_training_start(self):
+        self.evaluate()
+
+    def _on_step(self):
+        if (self.num_timesteps <= self.config["total_steps"]
+                and self.num_timesteps % self.config["eval_freq"] == 0):
+            self.model.save(self.output_dir / "checkpoints" / f"step_{self.num_timesteps}.zip")
+            self.evaluate()
+        return True
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--env-id", default=None)
+    parser.add_argument("--algo", choices=["ppo"], default=None)
+    parser.add_argument("--total-steps", type=int, default=None)
+    parser.add_argument("--seed", type=int, required=True)
+    parser.add_argument("--config", type=Path, default=Path(__file__).parent / "configs/baseline.json")
+    parser.add_argument("--output-dir", type=Path)
+    parser.add_argument("--device", default=None)
+    args = parser.parse_args()
+
+    cfg = load_config(args.config)
+    for key in ("env_id", "algo", "total_steps", "device"):
+        if getattr(args, key) is not None:
+            cfg[key] = getattr(args, key)
+    cfg["seed"] = args.seed
+    if cfg["algo"] != "ppo" or cfg["n_envs"] != 1:
+        raise ValueError("This baseline uses PPO and exactly one training environment.")
+    if cfg["total_steps"] <= 0 or cfg["eval_freq"] <= 0 or cfg["eval_episodes"] <= 0:
+        raise ValueError("Training and evaluation budgets must be positive.")
+    if cfg["total_steps"] % cfg["eval_freq"]:
+        raise ValueError("total_steps must be a multiple of eval_freq to include the budget endpoint.")
+
+    output = args.output_dir or Path("results") / cfg["method"] / f"seed_{args.seed}"
+    output.mkdir(parents=True, exist_ok=False)
+    (output / "checkpoints").mkdir()
+    (output / "config.json").write_text(json.dumps(cfg, indent=2) + "\n")
+    torch.set_num_threads(cfg["torch_threads"])
+    env = make_env(cfg["env_id"], monitor_path=output / "monitor.csv")
+    model = PPO(
+        "CnnPolicy", env, seed=args.seed, device=cfg["device"], verbose=1,
+        policy_kwargs=dict(
+            features_extractor_class=MinigridFeaturesExtractor,
+            features_extractor_kwargs=dict(features_dim=cfg["features_dim"]),
+            normalize_images=False,
+        ),
+        **cfg["ppo"],
+    )
+    model.set_logger(configure(str(output), ["stdout", "csv"]))
+    commit = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True)
+    dirty = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True)
+    packages = ("minigrid", "gymnasium", "stable-baselines3", "torch", "numpy")
+    with (output / "run.log").open("w", encoding="utf-8") as log:
+        log.write(f"Command: {shlex.join([sys.executable, *sys.argv])}\n")
+        log.write(f"Started: {time.strftime('%Y-%m-%dT%H:%M:%S%z')}\n")
+        log.write(f"Python: {platform.python_version()}\nPlatform: {platform.platform()}\n")
+        log.write(f"CPU: {platform.processor()}\nTorch threads: {torch.get_num_threads()}\n")
+        log.write(f"Device: {model.device}\nCUDA_VISIBLE_DEVICES: {os.getenv('CUDA_VISIBLE_DEVICES', 'unset')}\n")
+        if model.device.type == "cuda":
+            log.write(f"GPU: {torch.cuda.get_device_name(model.device)}\n")
+        log.write(f"Versions: { {name: version(name) for name in packages} }\n")
+        log.write(f"Code commit: {commit.stdout.strip() or 'unavailable'}\n")
+        log.write(f"Working tree status:\n{dirty.stdout}\nNetwork:\n{model.policy}\n")
+
+    callback = PeriodicEvaluation(cfg, output)
+    start = time.perf_counter()
+    try:
+        model.learn(total_timesteps=cfg["total_steps"], callback=callback)
+        learn_seconds = time.perf_counter() - start
+        # This is deliberately after learn() and the final PPO parameter update.
+        model.save(output / "final.zip")
+        cfg["actual_steps"] = model.num_timesteps
+        cfg["timing"] = {"learn_seconds": learn_seconds,
+                         "periodic_eval_seconds": callback.eval_seconds}
+        (output / "config.json").write_text(json.dumps(cfg, indent=2) + "\n")
+        with (output / "run.log").open("a", encoding="utf-8") as log:
+            log.write(f"Nominal steps: {cfg['total_steps']}\nActual steps: {model.num_timesteps}\n")
+            log.write(f"Timing (seconds): {cfg['timing']}\nFinal model: {output / 'final.zip'}\n")
+        print(f"Saved {output / 'final.zip'} at {model.num_timesteps} steps. "
+              "Run evaluate.py separately for final 6x6 and 8x8 tests.")
+    finally:
+        env.close()
+        model.logger.close()
+
+
+if __name__ == "__main__":
+    main()

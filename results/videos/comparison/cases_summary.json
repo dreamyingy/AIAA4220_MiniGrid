@@ -1,0 +1,114 @@
+[
+  {
+    "size": "6x6",
+    "env_id": "MiniGrid-DoorKey-6x6-v0",
+    "episode_seed": 20000,
+    "label": "6x6 Task Evaluation",
+    "baseline_success": 1,
+    "baseline_steps": 11,
+    "baseline_cycle": {
+      "has_cycle": false,
+      "start_step": null,
+      "period": null,
+      "repeats": 0,
+      "action_pattern": []
+    },
+    "modified_success": 1,
+    "modified_steps": 11,
+    "modified_cycle": {
+      "has_cycle": false,
+      "start_step": null,
+      "period": null,
+      "repeats": 0,
+      "action_pattern": []
+    }
+  },
+  {
+    "size": "8x8",
+    "env_id": "MiniGrid-DoorKey-8x8-v0",
+    "episode_seed": 30008,
+    "label": "8x8 Zero-Shot — Rescued Failure",
+    "baseline_success": 0,
+    "baseline_steps": 640,
+    "baseline_cycle": {
+      "has_cycle": true,
+      "start_step": 0,
+      "period": 1,
+      "repeats": 640,
+      "action_pattern": [
+        "pick up"
+      ]
+    },
+    "modified_success": 1,
+    "modified_steps": 17,
+    "modified_cycle": {
+      "has_cycle": false,
+      "start_step": null,
+      "period": null,
+      "repeats": 0,
+      "action_pattern": []
+    }
+  },
+  {
+    "size": "8x8",
+    "env_id": "MiniGrid-DoorKey-8x8-v0",
+    "episode_seed": 30007,
+    "label": "8x8 Zero-Shot Failure Analysis",
+    "baseline_success": 0,
+    "baseline_steps": 640,
+    "baseline_cycle": {
+      "has_cycle": true,
+      "start_step": 6,
+      "period": 6,
+      "repeats": 105,
+      "action_pattern": [
+        "forward",
+        "turn right",
+        "turn right",
+        "forward",
+        "turn left",
+        "turn left"
+      ]
+    },
+    "modified_success": 0,
+    "modified_steps": 640,
+    "modified_cycle": {
+      "has_cycle": true,
+      "start_step": 12,
+      "period": 1,
+      "repeats": 628,
+      "action_pattern": [
+        "pick up"
+      ]
+    }
+  },
+  {
+    "size": "8x8",
+    "env_id": "MiniGrid-DoorKey-8x8-v0",
+    "episode_seed": 30009,
+    "label": "8x8 Zero-Shot Failure Analysis",
+    "baseline_success": 0,
+    "baseline_steps": 640,
+    "baseline_cycle": {
+      "has_cycle": true,
+      "start_step": 12,
+      "period": 2,
+      "repeats": 314,
+      "action_pattern": [
+        "turn right",
+        "turn left"
+      ]
+    },
+    "modified_success": 0,
+    "modified_steps": 640,
+    "modified_cycle": {
+      "has_cycle": true,
+      "start_step": 23,
+      "period": 1,
+      "repeats": 617,
+      "action_pattern": [
+        "forward"
+      ]
+    }
+  }
+]

@@ -1,0 +1,19 @@
+Formal final evaluation completed: 2026-11-18T19:52:47+08:00
+Method: frame_stack (frame_stack=4, 12x7x7 partial observation); training seeds: 1, 2, 3.
+Training code commit: c49eb51b85d64dbe870fc61f5075de55b74b87e1 (clean working tree).
+Models: results/frame_stack/seed_<seed>/final.zip; each saved after 1,001,472 training steps (1,000,000 nominal).
+Hardware (training & evaluation): Linux x86_64, Intel(R) Xeon(R) Platinum 8369B CPU @ 2.90GHz, 1 PyTorch thread per process.
+Policy: deterministic=True. Evaluation device: CPU. PyTorch threads per process: 1.
+Python: 3.11.18
+Versions: minigrid=3.1.0, gymnasium=1.4.0, stable-baselines3=2.9.2, torch=2.15.0, numpy=2.4.6
+6x6: 100 episodes per model; episode seeds 20000..20099 (identical to baseline).
+8x8: 100 episodes per model; episode seeds 30000..30099 (identical to baseline); zero-shot transfer with no training or adaptation.
+Total: 600 episodes. All six CSV files passed count, seed, model-step, environment and phase checks.
+Original environment rewards; success determined by the original DoorKey goal reward.
+Per-seed metrics first, then three-seed mean and sample SD (ddof=1).
+
+Commands executed for each seed in 1, 2, 3:
+python evaluate.py --model results/frame_stack/seed_<seed>/final.zip --env-id MiniGrid-DoorKey-6x6-v0 --episodes 100 --episode-seed-start 20000 --device cpu --output results/frame_stack/seed_<seed>/final_6x6.csv
+python evaluate.py --model results/frame_stack/seed_<seed>/final.zip --env-id MiniGrid-DoorKey-8x8-v0 --episodes 100 --episode-seed-start 30000 --device cpu --output results/frame_stack/seed_<seed>/final_8x8.csv
+python analyze.py --input results/frame_stack --output results/summary_frame_stack
+python analyze.py --input results/baseline --compare results/frame_stack --output results/comparison

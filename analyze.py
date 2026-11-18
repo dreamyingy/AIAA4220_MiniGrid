@@ -436,11 +436,11 @@ def plot_comparison(base_cfg, mod_cfg, base_periodic, mod_periodic,
             )
         delta = (means[1] - means[0]) * 100
         title = "6×6 Training Task (seeds 20000–20099)" if size == "6x6" else "8×8 Zero-Shot Transfer (seeds 30000–30099)"
-        ax.text(0.5, 0.96, f"Δ ({m_name} − {b_name}): {delta:+.2f} pp",
+        ax.text(0.5, 0.97, f"Δ ({m_name} − {b_name}): {delta:+.2f} pp",
                 transform=ax.transAxes, ha="center", va="top", fontsize=9.5, color="#334155")
         ax.set(
             title=title, xticks=[0, 1], xticklabels=[b_name, m_name],
-            xlim=(-0.55, 1.55), ylim=(0.0, 1.18), yticks=np.linspace(0, 1, 6),
+            xlim=(-0.55, 1.55), ylim=(0.0, 1.25), yticks=np.linspace(0, 1, 6),
         )
         ax.yaxis.set_major_formatter(PercentFormatter(xmax=1))
         ax.set_axisbelow(True)
@@ -493,9 +493,14 @@ def plot_comparison(base_cfg, mod_cfg, base_periodic, mod_periodic,
         ax.yaxis.set_major_formatter(PercentFormatter(xmax=1))
         ax.set_axisbelow(True)
         ax.grid(axis="y", alpha=0.22)
+    from matplotlib.patches import Patch
+
     axes[0].set_ylabel("Episode fraction (mean ± sample SD across 3 seeds)")
-    handles, labels = axes[0].get_legend_handles_labels()
-    fig.legend(handles, labels, loc="lower center", ncol=2, frameon=False, fontsize=9.5)
+    legend_handles = [
+        Patch(facecolor="#94a3b8", edgecolor="#0f172a", label=f"{b_name} (solid)"),
+        Patch(facecolor="#cbd5e1", edgecolor="#0f172a", hatch="//", label=f"{m_name} (hatched)"),
+    ]
+    fig.legend(handles=legend_handles, loc="lower center", ncol=2, frameon=False, fontsize=9.5)
     fig.suptitle("Stage-Level Success and Failure Decomposition", fontsize=12)
     fig.tight_layout(rect=(0, 0.08, 1, 0.94))
     save_figure(fig, directory, "failure_breakdown_comparison")

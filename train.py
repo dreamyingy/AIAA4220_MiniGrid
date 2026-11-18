@@ -98,7 +98,11 @@ def main():
     )
     model.set_logger(configure(str(output), ["stdout", "csv"]))
     commit = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True)
-    dirty = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True)
+    dirty = subprocess.run(
+        ["git", "status", "--porcelain", "--", ":!results/"],
+        capture_output=True,
+        text=True,
+    )
     packages = ("minigrid", "gymnasium", "stable-baselines3", "torch", "numpy")
     total_params = sum(p.numel() for p in model.policy.parameters() if p.requires_grad)
     with (output / "run.log").open("w", encoding="utf-8") as log:

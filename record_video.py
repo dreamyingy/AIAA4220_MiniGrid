@@ -8,7 +8,7 @@ import imageio.v2 as imageio
 import torch
 from stable_baselines3 import PPO
 
-from common import make_env
+from common import infer_model_metadata, make_env
 from evaluate import run_episode
 
 
@@ -29,7 +29,8 @@ def main():
 
     torch.set_num_threads(1)
     model = PPO.load(args.model, device=args.device)
-    env = make_env(args.env_id, render_mode="rgb_array")
+    meta = infer_model_metadata(args.model, model=model)
+    env = make_env(args.env_id, render_mode="rgb_array", frame_stack=meta["frame_stack"])
     try:
         row, frames, trajectory = run_episode(model, env, args.episode_seed, capture=True)
     finally:
@@ -51,6 +52,8 @@ def main():
 
     trace = {
         "model": str(args.model),
+        "method": meta["method"],
+        "frame_stack": meta["frame_stack"],
         "train_seed": model.seed,
         "model_step": model.num_timesteps,
         "env_id": args.env_id,
@@ -61,7 +64,8 @@ def main():
         "trajectory": trajectory,
     }
     trace_path.write_text(json.dumps(trace, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"Saved {args.output}, {trace_path}, and {len(keyframes)} keyframes; "
+    print(f"Saved {args.output}, {trace_path}, and {len(keyframes)} keyframes "
+          f"({meta['method']}, frame_stack={meta['frame_stack']}); "
           f"success={row['success']}, episode_steps={row['steps']}, "
           f"video_seconds={len(frames) / args.fps:.1f}")
 

@@ -1,4 +1,4 @@
-"""Train the tutorial PPO baseline; final evaluation is a separate command."""
+"""Train the tutorial PPO baseline or controlled modification; final evaluation is separate."""
 
 import argparse
 import json
@@ -16,7 +16,7 @@ from stable_baselines3 import PPO
 from stable_baselines3.common.callbacks import BaseCallback
 from stable_baselines3.common.logger import configure
 
-from common import MinigridFeaturesExtractor, load_config, make_env
+from common import MinigridFeaturesExtractor, get_frame_stack, load_config, make_train_env
 from evaluate import evaluate_episodes, write_results
 
 
@@ -32,8 +32,14 @@ class PeriodicEvaluation(BaseCallback):
         cfg = self.config
         seeds = range(cfg["periodic_seed_start"],
                       cfg["periodic_seed_start"] + cfg["eval_episodes"])
-        rows = evaluate_episodes(self.model, cfg["env_id"], seeds,
-                                 method=cfg["method"], phase="periodic")
+        rows = evaluate_episodes(
+            self.model,
+            cfg["env_id"],
+            seeds,
+            method=cfg["method"],
+            phase="periodic",
+            frame_stack=get_frame_stack(cfg),
+        )
         write_results(rows, self.output_dir / "periodic_episodes.csv", append=True)
         self.eval_seconds += time.perf_counter() - start
         success = sum(row["success"] for row in rows) / len(rows)
@@ -59,15 +65,17 @@ def main():
     parser.add_argument("--config", type=Path, default=Path(__file__).parent / "configs/baseline.json")
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--device", default=None)
+    parser.add_argument("--frame-stack", type=int, default=None)
     args = parser.parse_args()
 
     cfg = load_config(args.config)
-    for key in ("env_id", "algo", "total_steps", "device"):
+    for key in ("env_id", "algo", "total_steps", "device", "frame_stack"):
         if getattr(args, key) is not None:
             cfg[key] = getattr(args, key)
     cfg["seed"] = args.seed
+    frame_stack = get_frame_stack(cfg)
     if cfg["algo"] != "ppo" or cfg["n_envs"] != 1:
-        raise ValueError("This baseline uses PPO and exactly one training environment.")
+        raise ValueError("This protocol uses PPO and exactly one training environment.")
     if cfg["total_steps"] <= 0 or cfg["eval_freq"] <= 0 or cfg["eval_episodes"] <= 0:
         raise ValueError("Training and evaluation budgets must be positive.")
     if cfg["total_steps"] % cfg["eval_freq"]:
@@ -78,7 +86,7 @@ def main():
     (output / "checkpoints").mkdir()
     (output / "config.json").write_text(json.dumps(cfg, indent=2) + "\n")
     torch.set_num_threads(cfg["torch_threads"])
-    env = make_env(cfg["env_id"], monitor_path=output / "monitor.csv")
+    env = make_train_env(cfg["env_id"], monitor_path=output / "monitor.csv", frame_stack=frame_stack)
     model = PPO(
         "CnnPolicy", env, seed=args.seed, device=cfg["device"], verbose=1,
         policy_kwargs=dict(
@@ -92,9 +100,12 @@ def main():
     commit = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True)
     dirty = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True)
     packages = ("minigrid", "gymnasium", "stable-baselines3", "torch", "numpy")
+    total_params = sum(p.numel() for p in model.policy.parameters() if p.requires_grad)
     with (output / "run.log").open("w", encoding="utf-8") as log:
         log.write(f"Command: {shlex.join([sys.executable, *sys.argv])}\n")
         log.write(f"Started: {time.strftime('%Y-%m-%dT%H:%M:%S%z')}\n")
+        log.write(f"Method: {cfg['method']}\nFrame stack: {frame_stack}\n")
+        log.write(f"Trainable policy parameters: {total_params}\n")
         log.write(f"Python: {platform.python_version()}\nPlatform: {platform.platform()}\n")
         log.write(f"CPU: {platform.processor()}\nTorch threads: {torch.get_num_threads()}\n")
         log.write(f"Device: {model.device}\nCUDA_VISIBLE_DEVICES: {os.getenv('CUDA_VISIBLE_DEVICES', 'unset')}\n")

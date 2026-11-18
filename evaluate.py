@@ -8,7 +8,7 @@ from time import perf_counter
 import torch
 from stable_baselines3 import PPO
 
-from common import make_env
+from common import infer_model_metadata, make_env
 
 
 def run_episode(model, env, episode_seed, capture=False):
@@ -70,9 +70,9 @@ def run_episode(model, env, episode_seed, capture=False):
     return row, frames, trajectory
 
 
-def evaluate_episodes(model, env_id, episode_seeds, method="baseline", phase="periodic"):
+def evaluate_episodes(model, env_id, episode_seeds, method="baseline", phase="periodic", frame_stack=1):
     """Return one raw row per episode; training RNG and environment are untouched."""
-    env = make_env(env_id)
+    env = make_env(env_id, frame_stack=frame_stack)
     rows = []
     try:
         for episode_seed in episode_seeds:
@@ -109,7 +109,8 @@ def main():
     parser.add_argument("--episode-seed-start", type=int, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--device", default="cpu")
-    parser.add_argument("--method", default="baseline")
+    parser.add_argument("--method", default=None, help="Defaults to method in adjacent config.json")
+    parser.add_argument("--frame-stack", type=int, default=None, help="Defaults to frame_stack in adjacent config.json or model channels")
     args = parser.parse_args()
     if args.episodes < 1:
         parser.error("--episodes must be positive")
@@ -118,13 +119,24 @@ def main():
 
     torch.set_num_threads(1)
     model = PPO.load(args.model, device=args.device)
+    meta = infer_model_metadata(args.model, model=model)
+    method = args.method if args.method is not None else meta["method"]
+    frame_stack = args.frame_stack if args.frame_stack is not None else meta["frame_stack"]
+    if frame_stack != meta["frame_stack"]:
+        raise ValueError(
+            f"--frame-stack={frame_stack} conflicts with model metadata frame_stack={meta['frame_stack']}"
+        )
+
     seeds = range(args.episode_seed_start, args.episode_seed_start + args.episodes)
-    rows = evaluate_episodes(model, args.env_id, seeds, method=args.method, phase="final")
+    rows = evaluate_episodes(
+        model, args.env_id, seeds, method=method, phase="final", frame_stack=frame_stack
+    )
     write_results(rows, args.output)
     success_rate = sum(row["success"] for row in rows) / len(rows)
     elapsed = sum(row["elapsed_seconds"] for row in rows)
-    print(f"{args.env_id}: {len(rows)} episodes, success={success_rate:.1%}, "
-          f"model_step={model.num_timesteps}, evaluation_seconds={elapsed:.2f}")
+    print(f"{args.env_id} ({method}, frame_stack={frame_stack}): {len(rows)} episodes, "
+          f"success={success_rate:.1%}, model_step={model.num_timesteps}, "
+          f"evaluation_seconds={elapsed:.2f}")
     print(f"Saved {args.output}")
 
 

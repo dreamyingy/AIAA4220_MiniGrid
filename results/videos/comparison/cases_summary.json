@@ -52,6 +52,35 @@
   {
     "size": "8x8",
     "env_id": "MiniGrid-DoorKey-8x8-v0",
+    "episode_seed": 30009,
+    "label": "8x8 Zero-Shot Failure Analysis",
+    "baseline_success": 0,
+    "baseline_steps": 640,
+    "baseline_cycle": {
+      "has_cycle": true,
+      "start_step": 12,
+      "period": 2,
+      "repeats": 314,
+      "action_pattern": [
+        "turn right",
+        "turn left"
+      ]
+    },
+    "modified_success": 0,
+    "modified_steps": 640,
+    "modified_cycle": {
+      "has_cycle": true,
+      "start_step": 23,
+      "period": 1,
+      "repeats": 617,
+      "action_pattern": [
+        "forward"
+      ]
+    }
+  },
+  {
+    "size": "8x8",
+    "env_id": "MiniGrid-DoorKey-8x8-v0",
     "episode_seed": 30007,
     "label": "8x8 Zero-Shot Failure Analysis",
     "baseline_success": 0,
@@ -79,35 +108,6 @@
       "repeats": 628,
       "action_pattern": [
         "pick up"
-      ]
-    }
-  },
-  {
-    "size": "8x8",
-    "env_id": "MiniGrid-DoorKey-8x8-v0",
-    "episode_seed": 30009,
-    "label": "8x8 Zero-Shot Failure Analysis",
-    "baseline_success": 0,
-    "baseline_steps": 640,
-    "baseline_cycle": {
-      "has_cycle": true,
-      "start_step": 12,
-      "period": 2,
-      "repeats": 314,
-      "action_pattern": [
-        "turn right",
-        "turn left"
-      ]
-    },
-    "modified_success": 0,
-    "modified_steps": 640,
-    "modified_cycle": {
-      "has_cycle": true,
-      "start_step": 23,
-      "period": 1,
-      "repeats": 617,
-      "action_pattern": [
-        "forward"
       ]
     }
   }

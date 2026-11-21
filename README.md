@@ -16,7 +16,7 @@ AIAA4220_MiniGrid
 ├── evaluate.py                     # 独立确定性评测（自动识别并校验模型配置）
 ├── analyze.py                      # 单方法汇总及 Baseline vs. 改进方法受控对比与绘图
 ├── record_video.py                 # 单回合视频、JSON 轨迹与事件关键帧导出
-├── compare_trajectories.py         # 双方法同回合对照筛选、周期死循环检测与 44s 分屏演示合成
+├── compare_trajectories.py         # 双方法同回合对照筛选、周期死循环检测与 1080p 52s 分屏演示合成
 └── results/                        # 正式模型、元数据、原始逐回合 CSV、汇总表与证据
     ├── baseline/                   # Baseline 三个训练种子（seed_1, seed_2, seed_3）
     ├── frame_stack/                # Frame Stack 改进实验输出目录（结构与 baseline 相同）
@@ -200,17 +200,26 @@ python analyze.py \
 | `figures/final_comparison.{png,pdf}` | `6×6` 与 `8×8` 零样本成功率柱状图 + 配对单 seed 散点连线 |
 | `figures/failure_breakdown_comparison.{png,pdf}` | 成功与三类失败阶段（未拿钥匙 / 拿钥匙未开门 / 开门未到终点）比例分解对比 |
 
-### 5. 双方法同回合对照与 44 秒分屏演示视频生成
+### 5. 双方法同回合对照与 1080p 52 秒演示视频生成
 
 ```bash
 python compare_trajectories.py \
   --baseline-dir results/baseline \
   --modified-dir results/frame_stack \
+  --comparison-csv results/comparison/comparison_table.csv \
   --seed 1 \
   --output-dir results/videos/comparison
 ```
 
-该脚本自动筛选同回合对照案例（含 2 成功、2 失败及针对 `30007`/`30009` 等死循环回合的对照），检测确定性状态循环周期，导出单回合 MP4、JSON、关键帧、`cases_summary.json` 以及符合 **30–60 秒**展示要求的 `comparison_demo_44s.mp4`。详细案例分析见 `results/videos/comparison/README.md`。
+如需基于已有录屏和轨迹 JSON 快速重渲染视频（无需重新加载模型推理），可加 `--recompose`：
+
+```bash
+python compare_trajectories.py --recompose \
+  --output-dir results/videos/comparison \
+  --comparison-csv results/comparison/comparison_table.csv
+```
+
+该脚本自动筛选同回合对照案例（含 2 成功、2 失败及针对 `30007`/`30009` 等死循环回合的对照），检测确定性状态循环周期，导出单回合 MP4、JSON、关键帧、`cases_summary.json` 以及符合 **30–60 秒**展示要求的 `1920×1080` 高清演示视频 `comparison_demo_52s.mp4`（含开场协议页、全局地图轨迹尾迹、实时 `7×7` 单帧 vs `4×7×7` 帧堆叠真实局部观测面板、`KEY→DOOR→GOAL` 里程碑、动作历史丝带与结尾定量总结页）。详细案例分析见 `results/videos/comparison/README.md`。
 
 ### 6. 核心受控对比结果（3 Seeds Mean ± Sample SD, `ddof=1`）
 

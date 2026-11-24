@@ -25,8 +25,11 @@ FINAL_METRICS = (
     "post_key_fail_rate",
 )
 METHOD_LABELS = {
-    "baseline": "Baseline (1-frame)",
-    "frame_stack": "Frame Stack (4-frame)",
+    "baseline": "Baseline (6×6, 1-frame)",
+    "frame_stack": "Frame Stack (k=4)",
+    "one_hot": "One-Hot CNN (20-ch)",
+    "rand_size": "Sub-Scale Size Rand ({5,6,7})",
+    "rand_layout": "Sub-Scale Layout Rand ({5,6,7}+Goal)",
 }
 
 
@@ -108,6 +111,9 @@ def collect_results(input_dir):
                   "ppo", "features_dim", "eval_freq", "eval_episodes",
                   "periodic_seed_start", "final_6x6_seed_start", "final_8x8_seed_start")
     frame_stack = int(config.get("frame_stack", 1))
+    representation = str(config.get("representation", "raw"))
+    train_sizes = config.get("train_sizes", None)
+    randomize_goal = bool(config.get("randomize_goal", False))
     periodic_rows, seed_rows, final_rows = [], [], []
     for seed in config["seeds"]:
         directory = input_dir / f"seed_{seed}"
@@ -115,6 +121,9 @@ def collect_results(input_dir):
             run = json.load(file)
         if (any(run[key] != config[key] for key in fixed_keys)
                 or int(run.get("frame_stack", 1)) != frame_stack
+                or str(run.get("representation", "raw")) != representation
+                or run.get("train_sizes", None) != train_sizes
+                or bool(run.get("randomize_goal", False)) != randomize_goal
                 or run["actual_steps"] != actual_steps):
             raise ValueError(f"Training configurations or actual budgets differ: {directory}")
         periodic = read_episodes(directory / "periodic_episodes.csv", run, seed,
@@ -201,16 +210,22 @@ def verify_matched_protocol(base_cfg, mod_cfg):
         raise ValueError(f"Unfair comparison — protocol mismatch between methods: {mismatches}")
     if base_cfg["method"] == mod_cfg["method"]:
         raise ValueError(f"Baseline and comparison directories share the same method name: {base_cfg['method']}")
+    isolated_change = {}
+    for field, default in (
+        ("frame_stack", 1),
+        ("representation", "raw"),
+        ("train_sizes", None),
+        ("randomize_goal", False),
+    ):
+        b_val = base_cfg.get(field, default)
+        m_val = mod_cfg.get(field, default)
+        if b_val != m_val:
+            isolated_change[field] = {"baseline": b_val, "modified": m_val}
     return {
         "fair_protocol_verified": True,
         "baseline_method": base_cfg["method"],
         "modified_method": mod_cfg["method"],
-        "isolated_change": {
-            "frame_stack": {
-                "baseline": int(base_cfg.get("frame_stack", 1)),
-                "modified": int(mod_cfg.get("frame_stack", 1)),
-            }
-        },
+        "isolated_change": isolated_change,
         "matched_protocol": {key: base_cfg[key] for key in matched_keys},
     }
 

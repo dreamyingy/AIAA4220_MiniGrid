@@ -16,7 +16,14 @@ from stable_baselines3 import PPO
 from stable_baselines3.common.callbacks import BaseCallback
 from stable_baselines3.common.logger import configure
 
-from common import MinigridFeaturesExtractor, get_frame_stack, load_config, make_train_env
+from common import (
+    get_features_extractor_class,
+    get_frame_stack,
+    get_representation,
+    get_train_sizes,
+    load_config,
+    make_train_env,
+)
 from evaluate import evaluate_episodes, write_results
 
 
@@ -74,6 +81,10 @@ def main():
             cfg[key] = getattr(args, key)
     cfg["seed"] = args.seed
     frame_stack = get_frame_stack(cfg)
+    representation = get_representation(cfg)
+    train_sizes = get_train_sizes(cfg)
+    randomize_goal = bool(cfg.get("randomize_goal", False))
+    features_extractor_class = get_features_extractor_class(cfg)
     if cfg["algo"] != "ppo" or cfg["n_envs"] != 1:
         raise ValueError("This protocol uses PPO and exactly one training environment.")
     if cfg["total_steps"] <= 0 or cfg["eval_freq"] <= 0 or cfg["eval_episodes"] <= 0:
@@ -86,11 +97,17 @@ def main():
     (output / "checkpoints").mkdir()
     (output / "config.json").write_text(json.dumps(cfg, indent=2) + "\n")
     torch.set_num_threads(cfg["torch_threads"])
-    env = make_train_env(cfg["env_id"], monitor_path=output / "monitor.csv", frame_stack=frame_stack)
+    env = make_train_env(
+        cfg["env_id"],
+        monitor_path=output / "monitor.csv",
+        frame_stack=frame_stack,
+        train_sizes=train_sizes,
+        randomize_goal=randomize_goal,
+    )
     model = PPO(
         "CnnPolicy", env, seed=args.seed, device=cfg["device"], verbose=1,
         policy_kwargs=dict(
-            features_extractor_class=MinigridFeaturesExtractor,
+            features_extractor_class=features_extractor_class,
             features_extractor_kwargs=dict(features_dim=cfg["features_dim"]),
             normalize_images=False,
         ),
@@ -109,6 +126,7 @@ def main():
         log.write(f"Command: {shlex.join([sys.executable, *sys.argv])}\n")
         log.write(f"Started: {time.strftime('%Y-%m-%dT%H:%M:%S%z')}\n")
         log.write(f"Method: {cfg['method']}\nFrame stack: {frame_stack}\n")
+        log.write(f"Representation: {representation}\nTrain sizes: {train_sizes}\nRandomize goal: {randomize_goal}\n")
         log.write(f"Trainable policy parameters: {total_params}\n")
         log.write(f"Python: {platform.python_version()}\nPlatform: {platform.platform()}\n")
         log.write(f"CPU: {platform.processor()}\nTorch threads: {torch.get_num_threads()}\n")

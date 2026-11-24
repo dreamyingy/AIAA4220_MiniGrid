@@ -25,16 +25,29 @@ FINAL_METRICS = (
     "post_key_fail_rate",
 )
 METHOD_LABELS = {
-    "baseline": "Baseline (6×6, 1-frame)",
+    "baseline": "Baseline (6×6, k=1)",
     "frame_stack": "Frame Stack (k=4)",
     "one_hot": "One-Hot CNN (20-ch)",
-    "rand_size": "Sub-Scale Size Rand ({5,6,7})",
-    "rand_layout": "Sub-Scale Layout Rand ({5,6,7}+Goal)",
+    "rand_size": "Size Rand ({5,6,7})",
+    "rand_layout": "Layout Rand ({5,6,7}+Goal)",
+    "rand_size_fs4": "Size Rand + Frame Stack",
+}
+SHORT_TICK_LABELS = {
+    "baseline": "Baseline\n(6×6, k=1)",
+    "frame_stack": "Frame Stack\n(6×6, k=4)",
+    "one_hot": "One-Hot CNN\n(6×6, 20-ch)",
+    "rand_size": "Size Rand\n({5,6,7}, k=1)",
+    "rand_layout": "Layout Rand\n({5,6,7}+Goal)",
+    "rand_size_fs4": "Size Rand + FS\n({5,6,7}, k=4)",
 }
 
 
 def display_name(method):
     return METHOD_LABELS.get(method, method.replace("_", " ").title())
+
+
+def tick_name(method):
+    return SHORT_TICK_LABELS.get(method, display_name(method))
 
 
 def read_episodes(path, config, seed, env_id, phase, model_steps, seed_start):
@@ -452,9 +465,10 @@ def plot_comparison(base_cfg, mod_cfg, base_periodic, mod_periodic,
         delta = (means[1] - means[0]) * 100
         title = "6×6 Training Task (seeds 20000–20099)" if size == "6x6" else "8×8 Zero-Shot Transfer (seeds 30000–30099)"
         ax.text(0.5, 0.97, f"Δ ({m_name} − {b_name}): {delta:+.2f} pp",
-                transform=ax.transAxes, ha="center", va="top", fontsize=9.5, color="#334155")
+                transform=ax.transAxes, ha="center", va="top", fontsize=9.2, color="#334155")
         ax.set(
-            title=title, xticks=[0, 1], xticklabels=[b_name, m_name],
+            title=title, xticks=[0, 1],
+            xticklabels=[tick_name(base_cfg["method"]), tick_name(mod_cfg["method"])],
             xlim=(-0.55, 1.55), ylim=(0.0, 1.25), yticks=np.linspace(0, 1, 6),
         )
         ax.yaxis.set_major_formatter(PercentFormatter(xmax=1))

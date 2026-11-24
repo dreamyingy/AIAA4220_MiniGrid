@@ -31,6 +31,7 @@ METHOD_LABELS = {
     "rand_size": "Size Rand ({5,6,7})",
     "rand_layout": "Layout Rand ({5,6,7}+Goal)",
     "rand_size_fs4": "Size Rand + Frame Stack",
+    "prog_size": "Prog. Sub-Scale ({5}→{5,6}→{5,6,7})",
 }
 SHORT_TICK_LABELS = {
     "baseline": "Baseline\n(6×6, k=1)",
@@ -39,6 +40,7 @@ SHORT_TICK_LABELS = {
     "rand_size": "Size Rand\n({5,6,7}, k=1)",
     "rand_layout": "Layout Rand\n({5,6,7}+Goal)",
     "rand_size_fs4": "Size Rand + FS\n({5,6,7}, k=4)",
+    "prog_size": "Prog. Sub-Scale\n({5}→{5,6}→{5,6,7})",
 }
 
 
@@ -126,6 +128,7 @@ def collect_results(input_dir):
     frame_stack = int(config.get("frame_stack", 1))
     representation = str(config.get("representation", "raw"))
     train_sizes = config.get("train_sizes", None)
+    size_schedule = config.get("size_schedule", None)
     randomize_goal = bool(config.get("randomize_goal", False))
     periodic_rows, seed_rows, final_rows = [], [], []
     for seed in config["seeds"]:
@@ -136,6 +139,7 @@ def collect_results(input_dir):
                 or int(run.get("frame_stack", 1)) != frame_stack
                 or str(run.get("representation", "raw")) != representation
                 or run.get("train_sizes", None) != train_sizes
+                or run.get("size_schedule", None) != size_schedule
                 or bool(run.get("randomize_goal", False)) != randomize_goal
                 or run["actual_steps"] != actual_steps):
             raise ValueError(f"Training configurations or actual budgets differ: {directory}")
@@ -228,6 +232,7 @@ def verify_matched_protocol(base_cfg, mod_cfg):
         ("frame_stack", 1),
         ("representation", "raw"),
         ("train_sizes", None),
+        ("size_schedule", None),
         ("randomize_goal", False),
     ):
         b_val = base_cfg.get(field, default)

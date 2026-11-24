@@ -20,6 +20,7 @@ from common import (
     get_features_extractor_class,
     get_frame_stack,
     get_representation,
+    get_size_schedule,
     get_train_sizes,
     load_config,
     make_train_env,
@@ -83,6 +84,7 @@ def main():
     frame_stack = get_frame_stack(cfg)
     representation = get_representation(cfg)
     train_sizes = get_train_sizes(cfg)
+    size_schedule = get_size_schedule(cfg)
     randomize_goal = bool(cfg.get("randomize_goal", False))
     features_extractor_class = get_features_extractor_class(cfg)
     if cfg["algo"] != "ppo" or cfg["n_envs"] != 1:
@@ -103,6 +105,7 @@ def main():
         frame_stack=frame_stack,
         train_sizes=train_sizes,
         randomize_goal=randomize_goal,
+        size_schedule=size_schedule,
     )
     model = PPO(
         "CnnPolicy", env, seed=args.seed, device=cfg["device"], verbose=1,
@@ -126,7 +129,7 @@ def main():
         log.write(f"Command: {shlex.join([sys.executable, *sys.argv])}\n")
         log.write(f"Started: {time.strftime('%Y-%m-%dT%H:%M:%S%z')}\n")
         log.write(f"Method: {cfg['method']}\nFrame stack: {frame_stack}\n")
-        log.write(f"Representation: {representation}\nTrain sizes: {train_sizes}\nRandomize goal: {randomize_goal}\n")
+        log.write(f"Representation: {representation}\nTrain sizes: {train_sizes}\nSize schedule: {size_schedule}\nRandomize goal: {randomize_goal}\n")
         log.write(f"Trainable policy parameters: {total_params}\n")
         log.write(f"Python: {platform.python_version()}\nPlatform: {platform.platform()}\n")
         log.write(f"CPU: {platform.processor()}\nTorch threads: {torch.get_num_threads()}\n")

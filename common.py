@@ -48,6 +48,22 @@ def get_train_sizes(config):
     return sizes
 
 
+def get_size_schedule(config):
+    schedule = config.get("size_schedule", None)
+    if schedule is None:
+        return None
+    parsed = []
+    for step_thresh, sizes in schedule:
+        sizes_int = [int(s) for s in sizes]
+        if not sizes_int or any(s < 5 for s in sizes_int):
+            raise ValueError(f"Invalid sizes in size_schedule: {sizes}")
+        parsed.append((int(step_thresh), tuple(sizes_int)))
+    parsed.sort(key=lambda item: item[0])
+    if not parsed or parsed[0][0] != 0:
+        raise ValueError("size_schedule must start at step threshold 0.")
+    return parsed
+
+
 def get_features_extractor_class(config):
     rep = get_representation(config)
     if rep == "one_hot":
@@ -120,17 +136,23 @@ class CustomGoalDoorKeyEnv(DoorKeyEnv):
 
 
 class RandomizedDoorKeyEnv(gym.Env):
-    """Sample sub-scale DoorKey room sizes on each reset while preserving 7x7x3 partial obs."""
+    """Sample sub-scale DoorKey room sizes on each reset (uniform or progressive schedule)."""
 
     metadata = {"render_modes": ["rgb_array"]}
 
-    def __init__(self, sizes=(5, 6, 7), randomize_goal=False, render_mode=None):
+    def __init__(self, sizes=(5, 6, 7), randomize_goal=False, size_schedule=None, render_mode=None):
         super().__init__()
-        self.sizes = tuple(int(s) for s in sizes)
+        self.size_schedule = size_schedule
+        if self.size_schedule is not None:
+            all_sizes = sorted({s for _, grp in self.size_schedule for s in grp})
+            self.sizes = tuple(all_sizes)
+        else:
+            self.sizes = tuple(int(s) for s in sizes)
         if not self.sizes or any(s < 5 for s in self.sizes):
             raise ValueError(f"All training DoorKey sizes must be >= 5, got {self.sizes}")
         self.randomize_goal = bool(randomize_goal)
         self.render_mode = render_mode
+        self._total_steps = 0
         self._sub_envs = {
             size: ImgObsWrapper(
                 CustomGoalDoorKeyEnv(
@@ -146,9 +168,21 @@ class RandomizedDoorKeyEnv(gym.Env):
         self.observation_space = self._active_env.observation_space
         self.action_space = self._active_env.action_space
 
+    def _current_pool(self):
+        if self.size_schedule is None:
+            return self.sizes
+        pool = self.size_schedule[0][1]
+        for thresh, sizes in self.size_schedule:
+            if self._total_steps >= thresh:
+                pool = sizes
+            else:
+                break
+        return pool
+
     def reset(self, *, seed=None, options=None):
         super().reset(seed=seed)
-        self._active_size = int(self.sizes[int(self.np_random.integers(0, len(self.sizes)))])
+        pool = self._current_pool()
+        self._active_size = int(pool[int(self.np_random.integers(0, len(pool)))])
         self._active_env = self._sub_envs[self._active_size]
         child_seed = int(self.np_random.integers(0, 2**31 - 1))
         obs, info = self._active_env.reset(seed=child_seed, options=options)
@@ -156,6 +190,7 @@ class RandomizedDoorKeyEnv(gym.Env):
         return obs, info
 
     def step(self, action):
+        self._total_steps += 1
         return self._active_env.step(action)
 
     def render(self):
@@ -218,12 +253,23 @@ def make_env(env_id, render_mode=None, monitor_path=None, frame_stack=1):
     return Monitor(env, filename=str(monitor_path) if monitor_path else None)
 
 
-def make_train_env(env_id, monitor_path=None, frame_stack=1, train_sizes=None, randomize_goal=False):
+def make_train_env(
+    env_id,
+    monitor_path=None,
+    frame_stack=1,
+    train_sizes=None,
+    randomize_goal=False,
+    size_schedule=None,
+):
     """Build training environment; preserves unmodified baseline path when defaults are used."""
     def _build_single():
-        if train_sizes is not None or randomize_goal:
+        if train_sizes is not None or randomize_goal or size_schedule is not None:
             sizes = train_sizes if train_sizes is not None else [6]
-            base = RandomizedDoorKeyEnv(sizes=sizes, randomize_goal=randomize_goal)
+            base = RandomizedDoorKeyEnv(
+                sizes=sizes,
+                randomize_goal=randomize_goal,
+                size_schedule=size_schedule,
+            )
             return Monitor(base, filename=str(monitor_path) if monitor_path else None)
         return make_env(env_id, monitor_path=monitor_path, frame_stack=1)
 

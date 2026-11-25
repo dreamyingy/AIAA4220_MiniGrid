@@ -1,0 +1,299 @@
+{
+  "base_commit": "38177c8bfacc4a088c964d272c3361cda7e3ca53",
+  "source_sha256": {
+    "configs/rand_rect_under_8.json": "cf0e6480c0611280849b73c5c45e2497b5cd1ff2c552ea431893e905ce15bcae",
+    "configs/rand_rect_axis_8.json": "fb2774b117d61d6c86ffb3ceb14439bec39ebbd8c581762c04a3dc81921417d5",
+    "configs/rand_rect_axis_9.json": "5ef5641a00d166dc4fe480ba7af53cc17f4db92b7fa2e8b711403c01d5fa3ede",
+    "configs/rand_rect_near_8.json": "45b2eaefd851a16250c27e332c1c4c1c31d623f0db0d17114e7e1853f6a338df",
+    "common.py": "dfc7b5cda73a9720f69c60bf464105b3444c14f158415ffd02b87ff50dca243f",
+    "train.py": "b724c7cb5725fb23275749f77c5c875420df4e9b48b429f1ec70738eded67a9d",
+    "evaluate.py": "16d1934718d255a09ff6be6e9f6791c0a37de2c08327e78d6059b90ba8752206",
+    "analyze.py": "797ea29f9a329a733d8acd51021d4e3495746670d982cae56bade31b64fea7fe",
+    "experiments/size_transfer.py": "7589d607628c16e3b05eac26ff4b62db7a42f490c94164fdb065dfe8628cca0a"
+  },
+  "training_seeds": [
+    1,
+    2,
+    3
+  ],
+  "episode_count_per_seed_and_grid": 100,
+  "episode_seed_starts": {
+    "screening": {
+      "6x6": 41000,
+      "8x8": 51000
+    },
+    "confirmation": {
+      "6x6": 42000,
+      "8x8": 52000
+    },
+    "official": {
+      "6x6": 20000,
+      "8x8": 30000
+    }
+  },
+  "selection_rule": "Highest screening 8x8 mean over three seeds, then 6x6 mean, then method name.",
+  "target_8x8_success_rate": 0.9,
+  "candidates": [
+    {
+      "method": "rand_rect_under_8",
+      "env_id": "MiniGrid-DoorKey-6x6-v0",
+      "algo": "ppo",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "total_steps": 1000000,
+      "n_envs": 1,
+      "device": "cpu",
+      "torch_threads": 1,
+      "features_dim": 128,
+      "randomize_goal": false,
+      "eval_freq": 50000,
+      "eval_episodes": 100,
+      "periodic_seed_start": 10000,
+      "final_6x6_seed_start": 20000,
+      "final_8x8_seed_start": 30000,
+      "ppo": {
+        "learning_rate": 0.0003,
+        "n_steps": 2048,
+        "batch_size": 64,
+        "n_epochs": 10,
+        "gamma": 0.99,
+        "gae_lambda": 0.95,
+        "clip_range": 0.2,
+        "clip_range_vf": null,
+        "normalize_advantage": true,
+        "ent_coef": 0.0,
+        "vf_coef": 0.5,
+        "max_grad_norm": 0.5,
+        "use_sde": false,
+        "target_kl": null
+      },
+      "train_shapes": [
+        [
+          5,
+          5
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          7,
+          7
+        ],
+        [
+          5,
+          7
+        ],
+        [
+          7,
+          5
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          7,
+          6
+        ]
+      ]
+    },
+    {
+      "method": "rand_rect_axis_8",
+      "env_id": "MiniGrid-DoorKey-6x6-v0",
+      "algo": "ppo",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "total_steps": 1000000,
+      "n_envs": 1,
+      "device": "cpu",
+      "torch_threads": 1,
+      "features_dim": 128,
+      "randomize_goal": false,
+      "eval_freq": 50000,
+      "eval_episodes": 100,
+      "periodic_seed_start": 10000,
+      "final_6x6_seed_start": 20000,
+      "final_8x8_seed_start": 30000,
+      "ppo": {
+        "learning_rate": 0.0003,
+        "n_steps": 2048,
+        "batch_size": 64,
+        "n_epochs": 10,
+        "gamma": 0.99,
+        "gae_lambda": 0.95,
+        "clip_range": 0.2,
+        "clip_range_vf": null,
+        "normalize_advantage": true,
+        "ent_coef": 0.0,
+        "vf_coef": 0.5,
+        "max_grad_norm": 0.5,
+        "use_sde": false,
+        "target_kl": null
+      },
+      "train_shapes": [
+        [
+          5,
+          5
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          7,
+          7
+        ],
+        [
+          6,
+          8
+        ],
+        [
+          8,
+          6
+        ],
+        [
+          7,
+          8
+        ],
+        [
+          8,
+          7
+        ]
+      ]
+    },
+    {
+      "method": "rand_rect_axis_9",
+      "env_id": "MiniGrid-DoorKey-6x6-v0",
+      "algo": "ppo",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "total_steps": 1000000,
+      "n_envs": 1,
+      "device": "cpu",
+      "torch_threads": 1,
+      "features_dim": 128,
+      "randomize_goal": false,
+      "eval_freq": 50000,
+      "eval_episodes": 100,
+      "periodic_seed_start": 10000,
+      "final_6x6_seed_start": 20000,
+      "final_8x8_seed_start": 30000,
+      "ppo": {
+        "learning_rate": 0.0003,
+        "n_steps": 2048,
+        "batch_size": 64,
+        "n_epochs": 10,
+        "gamma": 0.99,
+        "gae_lambda": 0.95,
+        "clip_range": 0.2,
+        "clip_range_vf": null,
+        "normalize_advantage": true,
+        "ent_coef": 0.0,
+        "vf_coef": 0.5,
+        "max_grad_norm": 0.5,
+        "use_sde": false,
+        "target_kl": null
+      },
+      "train_shapes": [
+        [
+          5,
+          5
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          7,
+          7
+        ],
+        [
+          6,
+          9
+        ],
+        [
+          9,
+          6
+        ],
+        [
+          7,
+          9
+        ],
+        [
+          9,
+          7
+        ]
+      ]
+    },
+    {
+      "method": "rand_rect_near_8",
+      "env_id": "MiniGrid-DoorKey-6x6-v0",
+      "algo": "ppo",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "total_steps": 1000000,
+      "n_envs": 1,
+      "device": "cpu",
+      "torch_threads": 1,
+      "features_dim": 128,
+      "randomize_goal": false,
+      "eval_freq": 50000,
+      "eval_episodes": 100,
+      "periodic_seed_start": 10000,
+      "final_6x6_seed_start": 20000,
+      "final_8x8_seed_start": 30000,
+      "ppo": {
+        "learning_rate": 0.0003,
+        "n_steps": 2048,
+        "batch_size": 64,
+        "n_epochs": 10,
+        "gamma": 0.99,
+        "gae_lambda": 0.95,
+        "clip_range": 0.2,
+        "clip_range_vf": null,
+        "normalize_advantage": true,
+        "ent_coef": 0.0,
+        "vf_coef": 0.5,
+        "max_grad_norm": 0.5,
+        "use_sde": false,
+        "target_kl": null
+      },
+      "train_shapes": [
+        [
+          6,
+          6
+        ],
+        [
+          7,
+          7
+        ],
+        [
+          7,
+          8
+        ],
+        [
+          8,
+          7
+        ]
+      ]
+    }
+  ],
+  "references": [
+    "baseline",
+    "rand_size",
+    "prog_size"
+  ]
+}

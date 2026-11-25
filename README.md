@@ -2,6 +2,11 @@
 
 本项目研究 MiniGrid DoorKey 中的局部可观测稀疏奖励导航，通过官方 Baseline 复现、一项受控主要改进（**Memory: 4-Frame Stacking**）与严格配对评测，分析样本效率、失败机制及从 `6×6` 到 `8×8` 的零样本泛化表现。Baseline 沿用官方 MiniGrid PPO 教程的自定义 CNN 特征提取器与 Stable-Baselines3 PPO。
 
+## 追加实验
+
+- 冻结 Baseline PPO 后加入确定性回合记忆，8×8 正式评测通关 **297/300 局（99.0%）**。复现命令、选型记录和逐回合动作见[回合记忆实验报告](results/target90_20261124/episodic_memory/REPORT.md)。
+- 四种矩形尺寸分布的三种子训练及失败轨迹见[尺寸迁移试验记录](results/size_transfer_20261124/ATTEMPTS.md)。
+
 ## 项目结构
 
 ```text
@@ -50,6 +55,8 @@ python -m pip check
 ```
 
 正式实验环境锁定为 Python `3.11.18`、MiniGrid `3.1.0`、Gymnasium `1.4.0`、Stable-Baselines3 `2.9.2`、PyTorch `2.15.0`、NumPy `2.4.6`；`requirements.txt` 通过 PEP 508 平台标记保留 Linux x86_64 上的精确 CUDA 13 依赖，同时支持非 CUDA 平台安装核心环境。
+
+运行 `recurrent_ppo` 系列训练时，在上述环境中额外安装 `sb3-contrib==2.9.2`。
 
 ---
 

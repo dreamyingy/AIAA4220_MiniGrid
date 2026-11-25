@@ -1,0 +1,101 @@
+method,train_seed,model_step,phase,env_id,episode_seed,success,return,steps,terminated,truncated,key_step,door_step,goal_step,elapsed_seconds,outcome,actions
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42000,1,0.9725,11,True,False,3,5,11,0.009063106030225754,success,0 0 3 2 5 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42001,1,0.975,10,True,False,2,5,10,0.007038777694106102,success,2 3 2 0 5 2 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42002,1,0.9725,11,True,False,1,5,11,0.007219711318612099,success,3 2 1 2 5 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42003,1,0.9725,11,True,False,2,5,11,0.00709724985063076,success,0 3 2 0 5 2 2 2 1 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42004,1,0.96,16,True,False,3,10,16,0.010139334946870804,success,1 2 3 0 0 2 2 1 2 5 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42005,1,0.9675,13,True,False,1,7,13,0.008356517180800438,success,3 0 0 2 1 2 5 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42006,1,0.965,14,True,False,3,8,14,0.009162846952676773,success,0 2 3 0 0 2 1 5 2 2 2 1 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42007,1,0.9675,13,True,False,3,7,13,0.00871906615793705,success,2 0 3 2 2 1 5 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42008,1,0.9725,11,True,False,4,6,11,0.0071940235793590546,success,0 2 2 3 1 5 2 2 1 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42009,1,0.9675,13,True,False,6,9,13,0.008131414651870728,success,1 2 0 2 1 3 2 0 5 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42010,1,0.965,14,True,False,3,8,14,0.008922981098294258,success,1 2 3 0 0 2 1 5 2 2 2 1 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42011,1,0.9775,9,True,False,3,5,9,0.005931200459599495,success,1 1 3 1 5 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42012,1,0.975,10,True,False,3,5,10,0.0064232610166072845,success,1 1 3 1 5 2 2 1 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42013,1,0.97,12,True,False,2,5,12,0.007645728066563606,success,0 3 2 1 5 2 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42014,0,0.0,360,False,True,,,,0.21129503846168518,no_key,5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42015,1,0.965,14,True,False,2,7,14,0.008876420557498932,success,2 3 0 0 2 1 5 2 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42016,1,0.9675,13,True,False,1,7,13,0.008875731378793716,success,3 0 0 0 2 1 5 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42017,1,0.9575,17,True,False,6,11,17,0.011471448466181755,success,1 2 0 2 1 3 2 2 1 2 5 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42018,1,0.965,14,True,False,4,9,14,0.008971251547336578,success,1 2 2 3 0 0 2 0 5 2 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42019,1,0.9725,11,True,False,2,7,11,0.007188607007265091,success,2 3 0 0 2 0 5 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42020,1,0.975,10,True,False,3,5,10,0.006600061431527138,success,1 1 3 0 5 2 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42021,1,0.9575,17,True,False,5,10,17,0.010744215920567513,success,1 1 1 2 3 0 0 2 1 5 2 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42022,1,0.9625,15,True,False,4,9,15,0.009528841823339462,success,1 2 2 3 0 0 2 1 5 2 2 2 1 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42023,1,0.9725,11,True,False,3,6,11,0.0070649683475494385,success,1 1 3 2 0 5 2 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42024,1,0.975,10,True,False,3,5,10,0.00640648789703846,success,0 2 3 0 5 2 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42025,1,0.975,10,True,False,2,4,10,0.006460702046751976,success,0 3 1 5 2 2 2 1 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42026,0,0.0,360,False,True,,,,0.21216847002506256,no_key,2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42027,1,0.975,10,True,False,1,4,10,0.006512148305773735,success,3 2 0 5 2 2 2 1 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42028,1,0.975,10,True,False,3,5,10,0.00649670697748661,success,0 2 3 1 5 2 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42029,1,0.965,14,True,False,3,8,14,0.00897618941962719,success,2 1 3 2 2 1 2 5 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42030,1,0.9575,17,True,False,4,10,17,0.01078062690794468,success,0 2 2 3 0 0 2 2 1 5 2 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42031,1,0.9625,15,True,False,4,9,15,0.009609518572688103,success,1 2 2 3 0 0 2 1 5 2 2 2 1 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42032,1,0.975,10,True,False,1,4,10,0.006563855335116386,success,3 2 1 5 2 2 2 1 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42033,1,0.965,14,True,False,5,8,14,0.008909041061997414,success,1 1 2 2 3 2 1 5 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42034,1,0.97,12,True,False,4,7,12,0.0077291447669267654,success,0 2 2 3 1 2 5 2 2 1 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42035,1,0.9775,9,True,False,1,4,9,0.005912575870752335,success,3 2 1 5 2 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42036,1,0.9675,13,True,False,3,6,13,0.008486375212669373,success,2 2 3 2 1 5 2 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42037,1,0.9725,11,True,False,4,7,11,0.007033705711364746,success,1 2 1 3 1 1 5 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42038,1,0.9675,13,True,False,4,9,13,0.008348699659109116,success,1 2 2 3 0 0 2 0 5 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42039,1,0.975,10,True,False,3,5,10,0.006484737619757652,success,1 2 3 1 5 2 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42040,1,0.9575,17,True,False,4,10,17,0.010784883052110672,success,1 1 2 3 0 0 2 2 1 5 2 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42041,1,0.9725,11,True,False,4,6,11,0.007176794111728668,success,0 2 2 3 0 5 2 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42042,1,0.97,12,True,False,3,8,12,0.007681641727685928,success,2 2 3 0 0 2 0 5 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42043,1,0.9725,11,True,False,4,7,11,0.0071591660380363464,success,0 2 1 3 1 1 5 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42044,1,0.9675,13,True,False,5,8,13,0.008308438584208488,success,1 1 1 2 3 2 0 5 2 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42045,0,0.0,360,False,True,4,,,0.22822127677500248,key_no_door,2 2 1 3 2 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42046,1,0.965,14,True,False,3,8,14,0.009049206972122192,success,0 0 3 1 2 2 1 5 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42047,1,0.9675,13,True,False,4,9,13,0.008274614810943604,success,2 0 2 3 0 0 2 0 5 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42048,1,0.97,12,True,False,1,5,12,0.007716095075011253,success,3 2 2 1 5 2 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42049,1,0.975,10,True,False,3,6,10,0.006507908925414085,success,1 2 3 1 2 5 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42050,1,0.965,14,True,False,3,8,14,0.008876504376530647,success,0 2 3 2 2 1 2 5 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42051,0,0.0,360,False,True,,,,0.2232602797448635,no_key,0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42052,1,0.9625,15,True,False,5,8,15,0.009946612641215324,success,1 1 2 2 3 2 1 5 2 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42053,1,0.975,10,True,False,3,6,10,0.006565257906913757,success,0 2 3 1 2 5 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42054,1,0.965,14,True,False,4,8,14,0.009056568145751953,success,0 2 2 3 2 1 2 5 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42055,1,0.975,10,True,False,3,5,10,0.007427772507071495,success,0 2 3 1 5 2 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42056,1,0.9625,15,True,False,4,9,15,0.009606435894966125,success,1 2 2 3 0 0 2 1 5 2 2 2 1 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42057,1,0.975,10,True,False,2,4,10,0.00650436244904995,success,0 3 1 5 2 2 2 1 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42058,1,0.9675,13,True,False,4,9,13,0.008367953822016716,success,0 2 2 3 0 0 2 0 5 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42059,0,0.0,360,False,True,2,,,0.22658352367579937,key_no_door,0 3 2 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42060,1,0.96,16,True,False,6,12,16,0.010301783680915833,success,0 2 2 2 1 3 2 1 2 1 2 5 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42061,1,0.9725,11,True,False,4,6,11,0.007138872519135475,success,1 1 2 3 1 5 2 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42062,1,0.9675,13,True,False,6,9,13,0.00831003487110138,success,1 2 0 2 1 3 2 0 5 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42063,1,0.9725,11,True,False,5,7,11,0.007283927872776985,success,2 1 2 0 3 1 5 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42064,1,0.965,14,True,False,2,8,14,0.008913777768611908,success,1 3 0 0 2 1 2 5 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42065,1,0.965,14,True,False,3,8,14,0.00888843834400177,success,1 1 3 0 2 1 2 5 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42066,1,0.96,16,True,False,3,9,16,0.010165408253669739,success,0 2 3 0 0 2 2 1 5 2 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42067,1,0.97,12,True,False,2,7,12,0.011034836992621422,success,0 3 1 1 2 1 5 2 2 1 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42068,1,0.9725,11,True,False,2,5,11,0.009745245799422264,success,1 3 2 0 5 2 2 2 1 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42069,1,0.965,14,True,False,2,8,14,0.01326579786837101,success,1 3 0 0 0 2 1 5 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42070,1,0.9725,11,True,False,3,5,11,0.00980643555521965,success,1 2 3 0 5 2 2 2 1 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42071,1,0.975,10,True,False,2,5,10,0.009135501459240913,success,2 3 2 0 5 2 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42072,1,0.9725,11,True,False,4,7,11,0.010299775749444962,success,0 2 1 3 1 1 5 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42073,1,0.975,10,True,False,2,5,10,0.009139103814959526,success,0 3 2 0 5 2 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42074,1,0.9675,13,True,False,4,8,13,0.011729128658771515,success,1 1 2 3 2 1 2 5 2 2 1 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42075,1,0.97,12,True,False,3,6,12,0.011393582448363304,success,1 2 3 2 1 5 2 2 2 1 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42076,1,0.975,10,True,False,1,4,10,0.009089052677154541,success,3 2 0 5 2 2 2 1 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42077,1,0.9725,11,True,False,2,7,11,0.009876290336251259,success,1 3 0 2 1 2 5 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42078,1,0.9675,13,True,False,3,6,13,0.011404760181903839,success,2 2 3 2 1 5 2 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42079,1,0.9675,13,True,False,3,8,13,0.011974494904279709,success,0 0 3 0 0 2 0 5 2 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42080,1,0.9725,11,True,False,2,5,11,0.00999111495912075,success,0 3 2 0 5 2 2 2 1 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42081,1,0.9625,15,True,False,3,8,15,0.01335497759282589,success,1 1 3 2 2 2 1 5 2 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42082,1,0.96,16,True,False,3,9,16,0.01087457686662674,success,2 2 3 0 0 2 2 1 5 2 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42083,1,0.9775,9,True,False,2,4,9,0.005968615412712097,success,2 3 0 5 2 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42084,1,0.9675,13,True,False,3,8,13,0.008555391803383827,success,2 2 3 1 1 2 1 5 2 2 1 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42085,1,0.9675,13,True,False,4,8,13,0.008654378354549408,success,2 2 0 3 0 2 0 5 2 2 1 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42086,1,0.9725,11,True,False,5,7,11,0.007255008444190025,success,1 1 2 1 3 2 5 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42087,1,0.9575,17,True,False,6,12,17,0.011001430451869965,success,1 1 2 2 0 3 0 2 2 1 2 5 2 2 1 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42088,1,0.98,8,True,False,1,3,8,0.005378074944019318,success,3 1 5 2 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42089,1,0.9775,9,True,False,2,4,9,0.006025087088346481,success,0 3 1 5 2 2 1 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42090,1,0.9725,11,True,False,2,7,11,0.0072068143635988235,success,0 3 0 2 1 2 5 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42091,1,0.9575,17,True,False,6,11,17,0.011091914027929306,success,1 2 0 2 1 3 2 2 1 2 5 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42092,1,0.975,10,True,False,3,5,10,0.006586669012904167,success,1 1 3 0 5 2 2 1 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42093,1,0.97,12,True,False,3,6,12,0.00788021832704544,success,0 2 3 2 1 5 2 2 2 1 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42094,1,0.9725,11,True,False,4,7,11,0.007156131789088249,success,2 0 2 3 0 2 5 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42095,1,0.9625,15,True,False,3,9,15,0.009754510596394539,success,2 0 3 0 2 2 1 2 5 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42096,1,0.97,12,True,False,2,5,12,0.00787666067481041,success,1 3 2 1 5 2 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42097,1,0.98,8,True,False,1,3,8,0.005277751013636589,success,3 0 5 2 2 2 1 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42098,1,0.9725,11,True,False,2,5,11,0.007331883534789085,success,1 3 2 1 5 2 2 1 2 2 2
+rand_size,1,1001472,dev,MiniGrid-DoorKey-6x6-v0,42099,1,0.975,10,True,False,2,5,10,0.006562672555446625,success,0 3 2 0 5 2 2 2 1 2

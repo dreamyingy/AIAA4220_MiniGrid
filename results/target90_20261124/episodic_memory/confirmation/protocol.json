@@ -1,0 +1,43 @@
+{
+  "controllers": {
+    "ppo": {
+      "mode": "ppo",
+      "repeat_visits": 3,
+      "count_penalty": 2.0
+    },
+    "count": {
+      "mode": "count",
+      "repeat_visits": 3,
+      "count_penalty": 2.0
+    },
+    "frontier": {
+      "mode": "frontier",
+      "repeat_visits": 3,
+      "count_penalty": 2.0
+    }
+  },
+  "split": "confirmation",
+  "first_episode_seed": {
+    "6": 46000,
+    "8": 56000
+  },
+  "episodes": 100,
+  "training_seeds": [
+    1,
+    2,
+    3
+  ],
+  "zero_further_training": true,
+  "deterministic_inference": true,
+  "controller_inputs": [
+    "7x7 symbolic observation",
+    "frozen PPO logits",
+    "episodic observation and action history"
+  ],
+  "script_sha256": "9a3b2f16f190c1b489ca3bb4dc0c629474c3ea19eaf81de1a9336ebab4407fbf",
+  "frozen_models": {
+    "baseline/1": "0defd8e0b547084d79b6804ed77a700cdb360ddc244704831e3c223e7f5c31b6",
+    "baseline/2": "25279689b5431289fea025bc5495abecde5f2be5484c2183857c9a32d5a27a03",
+    "baseline/3": "148fd4bbe4c9ae2d59376a8165ee2e54084b10b23691f6a451d4569aeef34c00"
+  }
+}

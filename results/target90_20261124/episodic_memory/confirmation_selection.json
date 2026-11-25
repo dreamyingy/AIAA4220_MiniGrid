@@ -1,0 +1,37 @@
+{
+  "locked_at_utc": "2026-11-24T11:12:40.985658+00:00",
+  "base_method": "baseline",
+  "primary_controller": "count",
+  "selection_rule": "Among candidates reaching 90% 8x8 screening, prefer original baseline weights for a single change and the observation-action counter for simplest inference memory.",
+  "secondary_controller": "frontier",
+  "greedy_control": "ppo",
+  "screening_summary_sha256": "523e1ad8b988d2155c536ef8837005d9f1901cad484c0233cdf44ba73673b884",
+  "screening_baseline_8x8": {
+    "ppo": 0.49333333333333335,
+    "count": 0.99,
+    "frontier": 1.0,
+    "visible_frontier": 1.0
+  },
+  "controller_settings": {
+    "ppo": {
+      "mode": "ppo",
+      "repeat_visits": 3,
+      "count_penalty": 2.0
+    },
+    "count": {
+      "mode": "count",
+      "repeat_visits": 3,
+      "count_penalty": 2.0
+    },
+    "frontier": {
+      "mode": "frontier",
+      "repeat_visits": 3,
+      "count_penalty": 2.0
+    }
+  },
+  "script_sha256": "9a3b2f16f190c1b489ca3bb4dc0c629474c3ea19eaf81de1a9336ebab4407fbf",
+  "confirmation_starts": {
+    "6": 46000,
+    "8": 56000
+  }
+}

@@ -1,0 +1,5 @@
+split,grid,reference,selected,train_seed,episode_seed,change,reference_outcome,selected_outcome,reference_steps,selected_steps,baseline_key_step,baseline_door_step,baseline_goal_step,selected_key_step,selected_door_step,selected_goal_step
+official,8x8,baseline,rand_rect_under_8,1,30010,rescued,door_no_goal,success,640,15,1,6,,1,6,15
+official,8x8,baseline,rand_rect_under_8,3,30000,rescued,key_no_door,success,640,15,2,,,2,10,15
+official,8x8,baseline,rand_rect_under_8,1,30022,regression,success,no_key,17,640,6,10,17,,,
+official,8x8,baseline,rand_rect_under_8,2,30010,regression,success,door_no_goal,15,640,1,6,15,1,6,

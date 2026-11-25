@@ -1,0 +1,13 @@
+method,train_seed,env_id,success_rate,mean_return,median_success_steps,fail_no_key_rate,fail_key_no_door_rate,fail_door_no_goal_rate,post_key_fail_rate
+baseline,1,MiniGrid-DoorKey-6x6-v0,0.84,0.8140249999999999,12.0,0.15,0.01,0.0,0.01
+baseline,1,MiniGrid-DoorKey-8x8-v0,0.38,0.3716046875000001,15.0,0.35,0.09,0.18,0.27
+baseline,2,MiniGrid-DoorKey-6x6-v0,0.94,0.9108749999999999,12.0,0.06,0.0,0.0,0.0
+baseline,2,MiniGrid-DoorKey-8x8-v0,0.75,0.73160625,16.0,0.13,0.04,0.08,0.12
+baseline,3,MiniGrid-DoorKey-6x6-v0,0.97,0.9392749999999999,13.0,0.03,0.0,0.0,0.0
+baseline,3,MiniGrid-DoorKey-8x8-v0,0.35,0.34260312500000006,15.0,0.15,0.31,0.19,0.5
+rand_size_fs4,1,MiniGrid-DoorKey-6x6-v0,0.99,0.9557499999999999,13.0,0.01,0.0,0.0,0.0
+rand_size_fs4,1,MiniGrid-DoorKey-8x8-v0,0.71,0.6899890625,19.0,0.1,0.05,0.14,0.19
+rand_size_fs4,2,MiniGrid-DoorKey-6x6-v0,0.93,0.8987499999999998,13.0,0.02,0.05,0.0,0.05
+rand_size_fs4,2,MiniGrid-DoorKey-8x8-v0,0.69,0.6695109375000001,20.0,0.11,0.07,0.13,0.2
+rand_size_fs4,3,MiniGrid-DoorKey-6x6-v0,0.72,0.6768249999999999,22.0,0.18,0.1,0.0,0.1
+rand_size_fs4,3,MiniGrid-DoorKey-8x8-v0,0.43,0.4003140625,43.0,0.3,0.22,0.05,0.27

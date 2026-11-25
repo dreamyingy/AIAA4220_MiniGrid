@@ -1,0 +1,51 @@
+{
+  "controllers": {
+    "ppo": {
+      "mode": "ppo",
+      "repeat_visits": 3,
+      "count_penalty": 2.0
+    },
+    "count": {
+      "mode": "count",
+      "repeat_visits": 3,
+      "count_penalty": 2.0
+    },
+    "frontier": {
+      "mode": "frontier",
+      "repeat_visits": 3,
+      "count_penalty": 2.0
+    },
+    "visible_frontier": {
+      "mode": "visible_frontier",
+      "repeat_visits": 2,
+      "count_penalty": 2.0
+    }
+  },
+  "split": "screening",
+  "first_episode_seed": {
+    "6": 45000,
+    "8": 55000
+  },
+  "episodes": 100,
+  "training_seeds": [
+    1,
+    2,
+    3
+  ],
+  "zero_further_training": true,
+  "deterministic_inference": true,
+  "controller_inputs": [
+    "7x7 symbolic observation",
+    "frozen PPO logits",
+    "episodic observation and action history"
+  ],
+  "script_sha256": "9a3b2f16f190c1b489ca3bb4dc0c629474c3ea19eaf81de1a9336ebab4407fbf",
+  "frozen_models": {
+    "rand_size/1": "07afac428f1134bd6ae3e74c5999555b41259b30391aee37063c9f5c9119cbab",
+    "rand_size/2": "8b9dd410ebbe864cde48ba58321c4e66fbdd3e2bf7f36394aedad4b93e8d18d1",
+    "rand_size/3": "ddaace973a6df05b3c1382c0006063abb3b0ef86d220a6f3f92bb3a5cd242b68",
+    "baseline/1": "0defd8e0b547084d79b6804ed77a700cdb360ddc244704831e3c223e7f5c31b6",
+    "baseline/2": "25279689b5431289fea025bc5495abecde5f2be5484c2183857c9a32d5a27a03",
+    "baseline/3": "148fd4bbe4c9ae2d59376a8165ee2e54084b10b23691f6a451d4569aeef34c00"
+  }
+}

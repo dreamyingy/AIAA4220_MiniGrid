@@ -1,0 +1,13 @@
+method,train_seed,6x6_success_rate,8x8_success_rate
+baseline,1,0.85,0.35
+baseline,2,0.98,0.77
+baseline,3,1.0,0.29
+prog_size,1,0.93,0.54
+prog_size,2,0.91,0.5
+prog_size,3,0.85,0.67
+rand_rect_under_8,1,0.97,0.51
+rand_rect_under_8,2,0.96,0.53
+rand_rect_under_8,3,0.95,0.72
+rand_size,1,0.95,0.75
+rand_size,2,0.94,0.7
+rand_size,3,0.9,0.37

@@ -1,0 +1,57 @@
+{
+  "locked_at_utc": "2026-11-24T11:13:31.738892+00:00",
+  "method": "baseline",
+  "controller": "count",
+  "settings": {
+    "mode": "count",
+    "repeat_visits": 3,
+    "count_penalty": 2.0
+  },
+  "classification": "separate deterministic inference-time controller; handbook approval unverified",
+  "selection_rule": "Use the simplest screened controller above 90% on the original baseline weights; require independent 8x8 confirmation of at least 90% before opening official seeds.",
+  "extra_training_steps": 0,
+  "train_seeds": [
+    1,
+    2,
+    3
+  ],
+  "episodes_per_seed": 100,
+  "screening_rates_by_grid": {
+    "6": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "8": [
+      1.0,
+      1.0,
+      0.97
+    ]
+  },
+  "confirmation_rates_by_grid": {
+    "6": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "8": [
+      1.0,
+      1.0,
+      0.98
+    ]
+  },
+  "confirmation_8x8_mean": 0.9933333333333333,
+  "official_first_episode_seeds": {
+    "6": 20000,
+    "8": 30000
+  },
+  "checkpoint_sha256": {
+    "1": "0defd8e0b547084d79b6804ed77a700cdb360ddc244704831e3c223e7f5c31b6",
+    "2": "25279689b5431289fea025bc5495abecde5f2be5484c2183857c9a32d5a27a03",
+    "3": "148fd4bbe4c9ae2d59376a8165ee2e54084b10b23691f6a451d4569aeef34c00"
+  },
+  "controller_script_sha256": "9a3b2f16f190c1b489ca3bb4dc0c629474c3ea19eaf81de1a9336ebab4407fbf",
+  "official_runner_sha256": "b1d199923eab23fd086e19e195b338bab9188532c2e6861261dd1b7b2010f973",
+  "screening_summary_sha256": "523e1ad8b988d2155c536ef8837005d9f1901cad484c0233cdf44ba73673b884",
+  "confirmation_summary_sha256": "89632f37417ddef53c5a91c1547e08b9b22e855b6c86d378bec5adfc43ff1e26"
+}

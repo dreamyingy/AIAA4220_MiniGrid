@@ -1,0 +1,7 @@
+method,controller,train_seed,model_step,phase,env_id,success_rate
+baseline,count,1,1001472,official,MiniGrid-DoorKey-6x6-v0,1
+baseline,count,1,1001472,official,MiniGrid-DoorKey-8x8-v0,1
+baseline,count,2,1001472,official,MiniGrid-DoorKey-6x6-v0,1
+baseline,count,2,1001472,official,MiniGrid-DoorKey-8x8-v0,1
+baseline,count,3,1001472,official,MiniGrid-DoorKey-6x6-v0,1
+baseline,count,3,1001472,official,MiniGrid-DoorKey-8x8-v0,0.97

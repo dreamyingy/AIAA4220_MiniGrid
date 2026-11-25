@@ -1,0 +1,17 @@
+method,controller,env_id,mean,sample_sd,n_train_seeds,n_episodes_per_seed
+rand_size,ppo,MiniGrid-DoorKey-6x6-v0,0.9333333333333333,0.030550504633038898,3,100
+rand_size,ppo,MiniGrid-DoorKey-8x8-v0,0.65,0.2598076211353316,3,100
+rand_size,count,MiniGrid-DoorKey-6x6-v0,1,0.0,3,100
+rand_size,count,MiniGrid-DoorKey-8x8-v0,1,0.0,3,100
+rand_size,frontier,MiniGrid-DoorKey-6x6-v0,1,0.0,3,100
+rand_size,frontier,MiniGrid-DoorKey-8x8-v0,1,0.0,3,100
+rand_size,visible_frontier,MiniGrid-DoorKey-6x6-v0,1,0.0,3,100
+rand_size,visible_frontier,MiniGrid-DoorKey-8x8-v0,1,0.0,3,100
+baseline,ppo,MiniGrid-DoorKey-6x6-v0,0.9166666666666666,0.08386497083606084,3,100
+baseline,ppo,MiniGrid-DoorKey-8x8-v0,0.49333333333333335,0.21571586249817912,3,100
+baseline,count,MiniGrid-DoorKey-6x6-v0,1,0.0,3,100
+baseline,count,MiniGrid-DoorKey-8x8-v0,0.99,0.017320508075688787,3,100
+baseline,frontier,MiniGrid-DoorKey-6x6-v0,1,0.0,3,100
+baseline,frontier,MiniGrid-DoorKey-8x8-v0,1,0.0,3,100
+baseline,visible_frontier,MiniGrid-DoorKey-6x6-v0,1,0.0,3,100
+baseline,visible_frontier,MiniGrid-DoorKey-8x8-v0,1,0.0,3,100

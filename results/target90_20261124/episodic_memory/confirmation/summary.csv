@@ -1,0 +1,7 @@
+method,controller,env_id,mean,sample_sd,n_train_seeds,n_episodes_per_seed
+baseline,ppo,MiniGrid-DoorKey-6x6-v0,0.9366666666666666,0.05859465277082314,3,100
+baseline,ppo,MiniGrid-DoorKey-8x8-v0,0.47333333333333333,0.2581343319539912,3,100
+baseline,count,MiniGrid-DoorKey-6x6-v0,1,0.0,3,100
+baseline,count,MiniGrid-DoorKey-8x8-v0,0.9933333333333333,0.011547005383792526,3,100
+baseline,frontier,MiniGrid-DoorKey-6x6-v0,1,0.0,3,100
+baseline,frontier,MiniGrid-DoorKey-8x8-v0,1,0.0,3,100

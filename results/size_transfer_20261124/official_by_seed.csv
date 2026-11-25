@@ -1,0 +1,4 @@
+method,train_seed,6x6_success_rate,8x8_success_rate
+rand_rect_under_8,1,0.96,0.57
+rand_rect_under_8,2,0.93,0.68
+rand_rect_under_8,3,0.87,0.67

@@ -1,0 +1,3 @@
+/private/tmp/minigrid-final-rerun.ZN2z4zH9/.venv/bin/python /tmp/aiaa4220-report.dGNHLRsC/repo/evaluate.py --model /tmp/aiaa4220-report.dGNHLRsC/repo/results/frame_stack/seed_2/final.zip --env-id MiniGrid-DoorKey-8x8-v0 --episodes 100 --episode-seed-start 30000 --device cpu --output /private/tmp/minigrid-final-rerun.ZN2z4zH9/evidence/final_episodes/frame_stack/seed_2/final_8x8.csv
+MiniGrid-DoorKey-8x8-v0 (frame_stack, frame_stack=4): 100 episodes, success=64.0%, model_step=1001472, evaluation_seconds=3.70
+Saved /private/tmp/minigrid-final-rerun.ZN2z4zH9/evidence/final_episodes/frame_stack/seed_2/final_8x8.csv

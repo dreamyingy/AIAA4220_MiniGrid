@@ -1,0 +1,96 @@
+{
+  "episodes_replayed": 1200,
+  "episode_differences_excluding_elapsed_seconds": 0,
+  "analysis_tables_matched_excluding_final_eval_seconds": [
+    "final_by_seed.csv",
+    "final_summary.csv",
+    "comparison_table.csv",
+    "seed_metrics.csv",
+    "training_summary.csv",
+    "periodic_by_seed.csv",
+    "periodic_summary.csv"
+  ],
+  "protocol_check_matched": true,
+  "by_seed": [
+    {
+      "method": "baseline",
+      "seed": 1,
+      "size": "6x6",
+      "successes": 84
+    },
+    {
+      "method": "baseline",
+      "seed": 1,
+      "size": "8x8",
+      "successes": 38
+    },
+    {
+      "method": "baseline",
+      "seed": 2,
+      "size": "6x6",
+      "successes": 94
+    },
+    {
+      "method": "baseline",
+      "seed": 2,
+      "size": "8x8",
+      "successes": 75
+    },
+    {
+      "method": "baseline",
+      "seed": 3,
+      "size": "6x6",
+      "successes": 97
+    },
+    {
+      "method": "baseline",
+      "seed": 3,
+      "size": "8x8",
+      "successes": 35
+    },
+    {
+      "method": "frame_stack",
+      "seed": 1,
+      "size": "6x6",
+      "successes": 98
+    },
+    {
+      "method": "frame_stack",
+      "seed": 1,
+      "size": "8x8",
+      "successes": 40
+    },
+    {
+      "method": "frame_stack",
+      "seed": 2,
+      "size": "6x6",
+      "successes": 97
+    },
+    {
+      "method": "frame_stack",
+      "seed": 2,
+      "size": "8x8",
+      "successes": 64
+    },
+    {
+      "method": "frame_stack",
+      "seed": 3,
+      "size": "6x6",
+      "successes": 96
+    },
+    {
+      "method": "frame_stack",
+      "seed": 3,
+      "size": "8x8",
+      "successes": 71
+    }
+  ],
+  "archived_model_sha256": {
+    "baseline/seed_1/final.zip": "0defd8e0b547084d79b6804ed77a700cdb360ddc244704831e3c223e7f5c31b6",
+    "baseline/seed_2/final.zip": "25279689b5431289fea025bc5495abecde5f2be5484c2183857c9a32d5a27a03",
+    "baseline/seed_3/final.zip": "148fd4bbe4c9ae2d59376a8165ee2e54084b10b23691f6a451d4569aeef34c00",
+    "frame_stack/seed_1/final.zip": "0d4d0f702673aafbdcbef5c0601a0151325347eba2c6f59d43c67fe8a761e465",
+    "frame_stack/seed_2/final.zip": "9c0512ff88ed53c9e273da8fcbcab73aa57548eb664dd9052eb38aa2cc94b828",
+    "frame_stack/seed_3/final.zip": "906e537e73c46f0e930d4b4e83baf02f94b03828df6ebdd551e6a55f0d95abaa"
+  }
+}

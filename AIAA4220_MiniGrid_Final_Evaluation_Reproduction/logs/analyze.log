@@ -1,0 +1,4 @@
+/private/tmp/minigrid-final-rerun.ZN2z4zH9/.venv/bin/python /tmp/aiaa4220-report.dGNHLRsC/repo/analyze.py --input /private/tmp/minigrid-final-rerun.ZN2z4zH9/staged/baseline --compare /private/tmp/minigrid-final-rerun.ZN2z4zH9/staged/frame_stack --output /private/tmp/minigrid-final-rerun.ZN2z4zH9/evidence/comparison
+Matplotlib is building the font cache; this may take a moment.
+Verified fair protocol and wrote comparison tables + figures to /private/tmp/minigrid-final-rerun.ZN2z4zH9/evidence/comparison
+Baseline T80 reached: 3/3 seeds | Modified T80 reached: 3/3 seeds

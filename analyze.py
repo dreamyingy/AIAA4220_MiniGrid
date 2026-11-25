@@ -27,6 +27,7 @@ FINAL_METRICS = (
 METHOD_LABELS = {
     "baseline": "Baseline (6×6, k=1)",
     "frame_stack": "Frame Stack (k=4)",
+    "recurrent_ppo": "Recurrent PPO (LSTM)",
     "one_hot": "One-Hot CNN (20-ch)",
     "rand_size": "Size Rand ({5,6,7})",
     "rand_layout": "Layout Rand ({5,6,7}+Goal)",
@@ -36,6 +37,7 @@ METHOD_LABELS = {
 SHORT_TICK_LABELS = {
     "baseline": "Baseline\n(6×6, k=1)",
     "frame_stack": "Frame Stack\n(6×6, k=4)",
+    "recurrent_ppo": "Recurrent PPO\n(6×6, LSTM)",
     "one_hot": "One-Hot CNN\n(6×6, 20-ch)",
     "rand_size": "Size Rand\n({5,6,7}, k=1)",
     "rand_layout": "Layout Rand\n({5,6,7}+Goal)",
@@ -128,6 +130,7 @@ def collect_results(input_dir):
     frame_stack = int(config.get("frame_stack", 1))
     representation = str(config.get("representation", "raw"))
     train_sizes = config.get("train_sizes", None)
+    train_shapes = config.get("train_shapes")
     size_schedule = config.get("size_schedule", None)
     randomize_goal = bool(config.get("randomize_goal", False))
     periodic_rows, seed_rows, final_rows = [], [], []
@@ -136,11 +139,15 @@ def collect_results(input_dir):
         with (directory / "config.json").open(encoding="utf-8") as file:
             run = json.load(file)
         if (any(run[key] != config[key] for key in fixed_keys)
+                or run.get("recurrent", {}) != config.get("recurrent", {})
                 or int(run.get("frame_stack", 1)) != frame_stack
                 or str(run.get("representation", "raw")) != representation
                 or run.get("train_sizes", None) != train_sizes
+                or run.get("train_shapes") != train_shapes
                 or run.get("size_schedule", None) != size_schedule
                 or bool(run.get("randomize_goal", False)) != randomize_goal
+                or run.get("count_exploration") != config.get("count_exploration")
+                or run.get("progress_potential") != config.get("progress_potential")
                 or run["actual_steps"] != actual_steps):
             raise ValueError(f"Training configurations or actual budgets differ: {directory}")
         periodic = read_episodes(directory / "periodic_episodes.csv", run, seed,
@@ -214,10 +221,15 @@ def write_single_summaries(config, periodic, seeds, final, output):
 def verify_matched_protocol(base_cfg, mod_cfg):
     """Ensure baseline and modification share identical task, budget, seeds, and eval protocol."""
     matched_keys = (
-        "env_id", "algo", "seeds", "total_steps", "n_envs", "ppo", "features_dim",
+        "env_id", "seeds", "total_steps", "n_envs", "ppo", "features_dim",
         "eval_freq", "eval_episodes", "periodic_seed_start",
         "final_6x6_seed_start", "final_8x8_seed_start",
     )
+    base_algo, mod_algo = (config.get("algo") for config in (base_cfg, mod_cfg))
+    if {base_algo, mod_algo}.difference({"ppo", "recurrent_ppo"}):
+        raise ValueError(f"Expected PPO algorithms, got {base_algo!r} and {mod_algo!r}.")
+    if base_algo == mod_algo:
+        matched_keys += ("algo",)
     mismatches = {
         key: {"baseline": base_cfg.get(key), "modified": mod_cfg.get(key)}
         for key in matched_keys
@@ -229,11 +241,16 @@ def verify_matched_protocol(base_cfg, mod_cfg):
         raise ValueError(f"Baseline and comparison directories share the same method name: {base_cfg['method']}")
     isolated_change = {}
     for field, default in (
+        ("algo", "ppo"),
+        ("recurrent", {}),
         ("frame_stack", 1),
         ("representation", "raw"),
         ("train_sizes", None),
+        ("train_shapes", None),
         ("size_schedule", None),
         ("randomize_goal", False),
+        ("count_exploration", None),
+        ("progress_potential", None),
     ):
         b_val = base_cfg.get(field, default)
         m_val = mod_cfg.get(field, default)

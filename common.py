@@ -6,8 +6,10 @@ from pathlib import Path
 import gymnasium as gym
 import minigrid  # Registers the MiniGrid environments.
 from minigrid.core.grid import Grid
+from minigrid.core.mission import MissionSpace
 from minigrid.core.world_object import Door, Goal, Key
 from minigrid.envs.doorkey import DoorKeyEnv
+from minigrid.minigrid_env import MiniGridEnv
 from minigrid.wrappers import ImgObsWrapper
 import numpy as np
 from gymnasium import spaces
@@ -17,6 +19,9 @@ from stable_baselines3.common.vec_env import DummyVecEnv, VecFrameStack, VecTran
 import torch
 from torch import nn
 from torch.nn import functional as F
+
+from exploration import with_count_exploration
+from progress_potential import DoorKeyProgressPotential
 
 
 def load_config(path=Path(__file__).parent / "configs" / "baseline.json"):
@@ -48,20 +53,46 @@ def get_train_sizes(config):
     return sizes
 
 
+def get_train_shapes(config):
+    shapes = config.get("train_shapes")
+    if shapes is None:
+        return None
+    if config.get("train_sizes") is not None or config.get("size_schedule") is not None:
+        raise ValueError("Use train_shapes without train_sizes or size_schedule.")
+    if not isinstance(shapes, list) or not shapes or any(
+        not isinstance(shape, (list, tuple))
+        or len(shape) != 2
+        or any(type(side) is not int or side < 5 for side in shape)
+        for shape in shapes
+    ):
+        raise ValueError("train_shapes must contain [width, height] pairs of integers >= 5.")
+    shapes = [tuple(shape) for shape in shapes]
+    if len(set(shapes)) != len(shapes):
+        raise ValueError("train_shapes must be unique; each shape is sampled uniformly.")
+    return shapes
+
+
 def get_size_schedule(config):
     schedule = config.get("size_schedule", None)
     if schedule is None:
         return None
     parsed = []
     for step_thresh, sizes in schedule:
-        sizes_int = [int(s) for s in sizes]
-        if not sizes_int or any(s < 5 for s in sizes_int):
-            raise ValueError(f"Invalid sizes in size_schedule: {sizes}")
-        parsed.append((int(step_thresh), tuple(sizes_int)))
+        shapes = tuple(_training_shape(size) for size in sizes)
+        if not shapes:
+            raise ValueError("Each size_schedule stage requires at least one shape.")
+        parsed.append((int(step_thresh), shapes))
     parsed.sort(key=lambda item: item[0])
     if not parsed or parsed[0][0] != 0:
         raise ValueError("size_schedule must start at step threshold 0.")
     return parsed
+
+
+def _training_shape(size):
+    shape = tuple(map(int, size)) if isinstance(size, (tuple, list)) else (int(size), int(size))
+    if len(shape) != 2 or min(shape) < 5:
+        raise ValueError(f"Training dimensions need two sides >= 5, got {shape}")
+    return shape
 
 
 def get_features_extractor_class(config):
@@ -109,11 +140,22 @@ def infer_model_metadata(model_path, model=None):
 
 
 class CustomGoalDoorKeyEnv(DoorKeyEnv):
-    """DoorKeyEnv with optional uniform right-room goal placement (for training randomization)."""
+    """DoorKey with optional rectangular rooms and randomized right-room goals."""
 
-    def __init__(self, size=6, randomize_goal=False, max_steps=None, **kwargs):
+    def __init__(self, size=6, randomize_goal=False, max_steps=None, *, shape=None, **kwargs):
         self.randomize_goal = bool(randomize_goal)
-        super().__init__(size=size, max_steps=max_steps, **kwargs)
+        if shape is None:
+            super().__init__(size=size, max_steps=max_steps, **kwargs)
+            return
+        width, height = shape
+        MiniGridEnv.__init__(
+            self,
+            mission_space=MissionSpace(mission_func=self._gen_mission),
+            width=width,
+            height=height,
+            max_steps=10 * width * height if max_steps is None else max_steps,
+            **kwargs,
+        )
 
     def _gen_grid(self, width, height):
         if not self.randomize_goal:
@@ -136,41 +178,56 @@ class CustomGoalDoorKeyEnv(DoorKeyEnv):
 
 
 class RandomizedDoorKeyEnv(gym.Env):
-    """Sample sub-scale DoorKey room sizes on each reset (uniform or progressive schedule)."""
+    """Sample a DoorKey shape on each reset, optionally scheduling square sizes."""
 
     metadata = {"render_modes": ["rgb_array"]}
+    CASE_FIELDS = ("layout_seed", "train_width", "train_height", "success", "actions")
 
-    def __init__(self, sizes=(5, 6, 7), randomize_goal=False, size_schedule=None, render_mode=None):
+    def __init__(
+        self, sizes=(5, 6, 7), randomize_goal=False, size_schedule=None,
+        render_mode=None, *, shapes=None, record_actions=False,
+    ):
         super().__init__()
-        self.size_schedule = size_schedule
-        if self.size_schedule is not None:
-            all_sizes = sorted({s for _, grp in self.size_schedule for s in grp})
-            self.sizes = tuple(all_sizes)
-        else:
-            self.sizes = tuple(int(s) for s in sizes)
-        if not self.sizes or any(s < 5 for s in self.sizes):
-            raise ValueError(f"All training DoorKey sizes must be >= 5, got {self.sizes}")
+        if shapes is not None and size_schedule is not None:
+            raise ValueError("Use shapes without a square size schedule.")
+        self.size_schedule = (
+            [(step, tuple(_training_shape(size) for size in pool))
+             for step, pool in size_schedule]
+            if size_schedule is not None else None
+        )
+        if shapes is None:
+            if self.size_schedule is not None:
+                shapes = sorted({shape for _, group in self.size_schedule for shape in group})
+            else:
+                shapes = [_training_shape(size) for size in sizes]
+        self.shapes = tuple(tuple(shape) for shape in shapes)
+        if not self.shapes or any(
+            len(shape) != 2 or any(side < 5 for side in shape) for shape in self.shapes
+        ):
+            raise ValueError(f"All DoorKey shapes need two sides >= 5, got {self.shapes}")
         self.randomize_goal = bool(randomize_goal)
         self.render_mode = render_mode
         self._total_steps = 0
+        self._episode_actions = [] if record_actions else None
+        self._layout_seed = None
         self._sub_envs = {
-            size: ImgObsWrapper(
+            shape: ImgObsWrapper(
                 CustomGoalDoorKeyEnv(
-                    size=size,
+                    shape=shape,
                     randomize_goal=self.randomize_goal,
                     render_mode=render_mode,
                 )
             )
-            for size in self.sizes
+            for shape in self.shapes
         }
-        self._active_size = self.sizes[0]
-        self._active_env = self._sub_envs[self._active_size]
+        self._active_shape = self.shapes[0]
+        self._active_env = self._sub_envs[self._active_shape]
         self.observation_space = self._active_env.observation_space
         self.action_space = self._active_env.action_space
 
     def _current_pool(self):
         if self.size_schedule is None:
-            return self.sizes
+            return self.shapes
         pool = self.size_schedule[0][1]
         for thresh, sizes in self.size_schedule:
             if self._total_steps >= thresh:
@@ -182,16 +239,30 @@ class RandomizedDoorKeyEnv(gym.Env):
     def reset(self, *, seed=None, options=None):
         super().reset(seed=seed)
         pool = self._current_pool()
-        self._active_size = int(pool[int(self.np_random.integers(0, len(pool)))])
-        self._active_env = self._sub_envs[self._active_size]
-        child_seed = int(self.np_random.integers(0, 2**31 - 1))
-        obs, info = self._active_env.reset(seed=child_seed, options=options)
-        info["train_grid_size"] = self._active_size
+        self._active_shape = pool[int(self.np_random.integers(0, len(pool)))]
+        self._active_env = self._sub_envs[self._active_shape]
+        self._layout_seed = int(self.np_random.integers(0, 2**31 - 1))
+        if self._episode_actions is not None:
+            self._episode_actions.clear()
+        obs, info = self._active_env.reset(seed=self._layout_seed, options=options)
+        width, height = self._active_shape
+        info["train_grid_shape"] = self._active_shape
+        if width == height:
+            info["train_grid_size"] = width
         return obs, info
 
     def step(self, action):
         self._total_steps += 1
-        return self._active_env.step(action)
+        observation, reward, terminated, truncated, info = self._active_env.step(action)
+        if self._episode_actions is not None:
+            self._episode_actions.append(str(int(action)))
+            if terminated or truncated:
+                width, height = self._active_shape
+                info.update(
+                    layout_seed=self._layout_seed, train_width=width, train_height=height,
+                    success=int(reward > 0), actions=" ".join(self._episode_actions),
+                )
+        return observation, reward, terminated, truncated, info
 
     def render(self):
         return self._active_env.render()
@@ -253,6 +324,33 @@ def make_env(env_id, render_mode=None, monitor_path=None, frame_stack=1):
     return Monitor(env, filename=str(monitor_path) if monitor_path else None)
 
 
+class FixedDoorKeyActionRecorder(gym.Wrapper):
+    """Record the original fixed-distribution episode with replay metadata."""
+
+    CASE_FIELDS = RandomizedDoorKeyEnv.CASE_FIELDS + ("layout_rng_state",)
+
+    def reset(self, *, seed=None, options=None):
+        self._layout_seed = seed if seed is not None else ""
+        self._layout_rng_state = (
+            json.dumps(self.env.unwrapped.np_random.bit_generator.state, separators=(",", ":"))
+            if seed is None else ""
+        )
+        self._actions = []
+        return self.env.reset(seed=seed, options=options)
+
+    def step(self, action):
+        observation, reward, terminated, truncated, info = self.env.step(action)
+        self._actions.append(str(int(action)))
+        if terminated or truncated:
+            board = self.env.unwrapped
+            info.update(
+                layout_seed=self._layout_seed, layout_rng_state=self._layout_rng_state,
+                train_width=board.width, train_height=board.height,
+                success=int(reward > 0), actions=" ".join(self._actions),
+            )
+        return observation, reward, terminated, truncated, info
+
+
 def make_train_env(
     env_id,
     monitor_path=None,
@@ -260,19 +358,41 @@ def make_train_env(
     train_sizes=None,
     randomize_goal=False,
     size_schedule=None,
+    train_shapes=None,
+    record_actions=False,
+    count_exploration=None,
+    progress_potential=None,
 ):
     """Build training environment; preserves unmodified baseline path when defaults are used."""
     def _build_single():
-        if train_sizes is not None or randomize_goal or size_schedule is not None:
+        if (train_sizes is not None or randomize_goal
+                or size_schedule is not None or train_shapes is not None):
             sizes = train_sizes if train_sizes is not None else [6]
             base = RandomizedDoorKeyEnv(
                 sizes=sizes,
                 randomize_goal=randomize_goal,
                 size_schedule=size_schedule,
+                shapes=train_shapes,
+                record_actions=record_actions,
             )
-            return Monitor(base, filename=str(monitor_path) if monitor_path else None)
-        return make_env(env_id, monitor_path=monitor_path, frame_stack=1)
+            monitored = Monitor(
+                base, filename=str(monitor_path) if monitor_path else None,
+                info_keywords=base.CASE_FIELDS if record_actions else (),
+            )
+        elif record_actions:
+            base = FixedDoorKeyActionRecorder(ImgObsWrapper(gym.make(env_id)))
+            monitored = Monitor(
+                base, filename=str(monitor_path) if monitor_path else None,
+                info_keywords=base.CASE_FIELDS,
+            )
+        else:
+            monitored = make_env(env_id, monitor_path=monitor_path, frame_stack=1)
+        if progress_potential is not None:
+            return DoorKeyProgressPotential(monitored, **progress_potential)
+        return with_count_exploration(monitored, count_exploration)
 
+    if count_exploration is not None and progress_potential is not None:
+        raise ValueError("Choose either count exploration or progress potential.")
     if frame_stack == 1:
         return _build_single()
     vec_env = DummyVecEnv([_build_single])

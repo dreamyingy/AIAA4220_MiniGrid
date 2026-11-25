@@ -6,10 +6,9 @@ from pathlib import Path
 
 import imageio.v2 as imageio
 import torch
-from stable_baselines3 import PPO
 
 from common import infer_model_metadata, make_env
-from evaluate import run_episode
+from evaluate import load_ppo_model, run_episode
 
 
 def main():
@@ -28,7 +27,7 @@ def main():
         raise FileExistsError(f"Video or trajectory already exists: {args.output}")
 
     torch.set_num_threads(1)
-    model = PPO.load(args.model, device=args.device)
+    model = load_ppo_model(args.model, device=args.device)
     meta = infer_model_metadata(args.model, model=model)
     env = make_env(args.env_id, render_mode="rgb_array", frame_stack=meta["frame_stack"])
     try:

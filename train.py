@@ -12,7 +12,6 @@ from importlib.metadata import version
 from pathlib import Path
 
 import torch
-from stable_baselines3 import PPO
 from stable_baselines3.common.callbacks import BaseCallback
 from stable_baselines3.common.logger import configure
 
@@ -21,11 +20,13 @@ from common import (
     get_frame_stack,
     get_representation,
     get_size_schedule,
+    get_train_shapes,
     get_train_sizes,
     load_config,
     make_train_env,
 )
-from evaluate import evaluate_episodes, write_results
+from evaluate import evaluate_episodes, ppo_class, write_results
+from exploration import get_count_exploration
 
 
 class PeriodicEvaluation(BaseCallback):
@@ -47,6 +48,7 @@ class PeriodicEvaluation(BaseCallback):
             method=cfg["method"],
             phase="periodic",
             frame_stack=get_frame_stack(cfg),
+            record_actions=cfg.get("record_actions", False),
         )
         write_results(rows, self.output_dir / "periodic_episodes.csv", append=True)
         self.eval_seconds += time.perf_counter() - start
@@ -67,13 +69,17 @@ class PeriodicEvaluation(BaseCallback):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--env-id", default=None)
-    parser.add_argument("--algo", choices=["ppo"], default=None)
+    parser.add_argument("--algo", choices=["ppo", "recurrent_ppo"], default=None)
     parser.add_argument("--total-steps", type=int, default=None)
     parser.add_argument("--seed", type=int, required=True)
     parser.add_argument("--config", type=Path, default=Path(__file__).parent / "configs/baseline.json")
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--device", default=None)
     parser.add_argument("--frame-stack", type=int, default=None)
+    parser.add_argument(
+        "--record-actions", action="store_true",
+        help="Record action sequences for periodic evaluations and randomized training episodes.",
+    )
     args = parser.parse_args()
 
     cfg = load_config(args.config)
@@ -81,14 +87,21 @@ def main():
         if getattr(args, key) is not None:
             cfg[key] = getattr(args, key)
     cfg["seed"] = args.seed
+    if args.record_actions:
+        cfg["record_actions"] = True
     frame_stack = get_frame_stack(cfg)
     representation = get_representation(cfg)
     train_sizes = get_train_sizes(cfg)
+    train_shapes = get_train_shapes(cfg)
     size_schedule = get_size_schedule(cfg)
     randomize_goal = bool(cfg.get("randomize_goal", False))
+    count_exploration = get_count_exploration(cfg)
+    progress_potential = cfg.get("progress_potential")
     features_extractor_class = get_features_extractor_class(cfg)
-    if cfg["algo"] != "ppo" or cfg["n_envs"] != 1:
+    if cfg["n_envs"] != 1:
         raise ValueError("This protocol uses PPO and exactly one training environment.")
+    model_class = ppo_class(cfg["algo"])
+    recurrent = cfg["algo"] == "recurrent_ppo"
     if cfg["total_steps"] <= 0 or cfg["eval_freq"] <= 0 or cfg["eval_episodes"] <= 0:
         raise ValueError("Training and evaluation budgets must be positive.")
     if cfg["total_steps"] % cfg["eval_freq"]:
@@ -106,13 +119,19 @@ def main():
         train_sizes=train_sizes,
         randomize_goal=randomize_goal,
         size_schedule=size_schedule,
+        train_shapes=train_shapes,
+        record_actions=cfg.get("record_actions", False),
+        count_exploration=count_exploration,
+        progress_potential=progress_potential,
     )
-    model = PPO(
-        "CnnPolicy", env, seed=args.seed, device=cfg["device"], verbose=1,
+    model = model_class(
+        "CnnLstmPolicy" if recurrent else "CnnPolicy",
+        env, seed=args.seed, device=cfg["device"], verbose=1,
         policy_kwargs=dict(
             features_extractor_class=features_extractor_class,
             features_extractor_kwargs=dict(features_dim=cfg["features_dim"]),
             normalize_images=False,
+            **(cfg.get("recurrent", {}) if recurrent else {}),
         ),
         **cfg["ppo"],
     )
@@ -124,12 +143,20 @@ def main():
         text=True,
     )
     packages = ("minigrid", "gymnasium", "stable-baselines3", "torch", "numpy")
+    if recurrent:
+        packages += ("sb3-contrib",)
     total_params = sum(p.numel() for p in model.policy.parameters() if p.requires_grad)
     with (output / "run.log").open("w", encoding="utf-8") as log:
         log.write(f"Command: {shlex.join([sys.executable, *sys.argv])}\n")
         log.write(f"Started: {time.strftime('%Y-%m-%dT%H:%M:%S%z')}\n")
         log.write(f"Method: {cfg['method']}\nFrame stack: {frame_stack}\n")
         log.write(f"Representation: {representation}\nTrain sizes: {train_sizes}\nSize schedule: {size_schedule}\nRandomize goal: {randomize_goal}\n")
+        if train_shapes is not None:
+            log.write(f"Train shapes (width, height): {train_shapes}\n")
+        if count_exploration is not None:
+            log.write(f"Count exploration: {count_exploration}\n")
+        if progress_potential is not None:
+            log.write(f"Progress potential: {progress_potential}\n")
         log.write(f"Trainable policy parameters: {total_params}\n")
         log.write(f"Python: {platform.python_version()}\nPlatform: {platform.platform()}\n")
         log.write(f"CPU: {platform.processor()}\nTorch threads: {torch.get_num_threads()}\n")

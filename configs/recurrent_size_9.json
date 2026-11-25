@@ -1,0 +1,74 @@
+{
+  "method": "recurrent_size_9",
+  "env_id": "MiniGrid-DoorKey-6x6-v0",
+  "algo": "recurrent_ppo",
+  "seeds": [
+    1,
+    2,
+    3
+  ],
+  "total_steps": 1000000,
+  "n_envs": 1,
+  "device": "cpu",
+  "torch_threads": 1,
+  "features_dim": 128,
+  "size_schedule": [
+    [
+      0,
+      [
+        5
+      ]
+    ],
+    [
+      100000,
+      [
+        5,
+        6
+      ]
+    ],
+    [
+      200000,
+      [
+        6,
+        7,
+        9
+      ]
+    ],
+    [
+      400000,
+      [
+        6,
+        7,
+        9,
+        9,
+        9,
+        9
+      ]
+    ]
+  ],
+  "randomize_goal": false,
+  "eval_freq": 50000,
+  "eval_episodes": 100,
+  "periodic_seed_start": 10000,
+  "final_6x6_seed_start": 20000,
+  "final_8x8_seed_start": 30000,
+  "ppo": {
+    "learning_rate": 0.0003,
+    "n_steps": 2048,
+    "batch_size": 64,
+    "n_epochs": 10,
+    "gamma": 0.99,
+    "gae_lambda": 0.95,
+    "clip_range": 0.2,
+    "clip_range_vf": null,
+    "normalize_advantage": true,
+    "ent_coef": 0.0,
+    "vf_coef": 0.5,
+    "max_grad_norm": 0.5,
+    "use_sde": false,
+    "target_kl": null
+  },
+  "recurrent": {
+    "lstm_hidden_size": 128
+  }
+}
